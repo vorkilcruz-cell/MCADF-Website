@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Online Python IDE</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <style>
+        /* Custom scrollbar for a darker theme */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; } /* bg-gray-800 */
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; } /* bg-gray-600 */
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; } /* bg-gray-500 */
+
+        /* Ensures full screen height */
+        html, body, #app { height: 100%; margin: 0; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        // Custom palette for a dark IDE theme
+                        'editor-bg': '#1e1e1e',
+                        'console-bg': '#0f172a', /* slate-900 */
+                        'primary': '#3b82f6', /* blue-500 */
+                        'primary-dark': '#2563eb', /* blue-600 */
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans h-full">
+
+<!-- NEW: Loading Screen (Py-Clicker Mini-Game) -->
+<div id="loading-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gray-900 transition-opacity duration-500">
+    <div class="text-center p-8 bg-gray-800 rounded-xl shadow-2xl border-2 border-primary max-w-lg w-full">
+        <!-- Spinner -->
+        <svg class="animate-spin h-10 w-10 text-primary mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <h2 class="text-2xl font-bold text-white mb-2">Initializing Python IDE...</h2>
+
+        <!-- NEW: Progress Bar Area -->
+        <div id="progress-bar-container" class="w-full bg-gray-700 rounded-full h-3 mb-2 overflow-hidden shadow-inner">
+            <div id="progress-bar-fill" class="h-3 bg-green-500 transition-all duration-700 ease-out" style="width: 0%;"></div>
+        </div>
+        <div class="flex justify-between mb-6">
+            <p id="loading-status-text" class="text-yellow-400 text-sm text-left">Waiting to start Pyodide load...</p>
+            <p id="progress-percentage" class="text-green-400 text-sm font-bold">0%</p>
+        </div>
+        <!-- End Progress Bar Area -->
+
+        <!-- The mini-game area -->
+        <div id="py-clicker-game" class="mt-6 p-4 bg-gray-900 rounded-lg border border-gray-700 shadow-inner">
+            <h3 class="text-xl font-semibold text-primary mb-3">Py-Clicker Mini-Game</h3>
+            <p class="text-gray-300 mb-4">How many clicks can you get before the IDE loads?</p>
+            <p id="click-count" class="text-4xl font-mono font-extrabold text-green-400 mb-4">0</p>
+            <button id="click-button" onclick="handleGameClick()" class="w-full py-3 bg-green-600 hover:bg-green-500 text-white font-bold rounded-lg transition duration-150 shadow-lg text-lg transform hover:scale-[1.01] active:scale-[0.98]">
+                CLICK ME!
+            </button>
+        </div>
+        <!-- End Mini-Game -->
+    </div>
+</div>
+
+<div id="app" class="flex flex-col h-full overflow-hidden">
+    <!-- Header -->
+    <header class="bg-gray-800 p-3 shadow-lg flex items-center justify-between">
+        <h1 class="text-xl font-bold text-white">Python In-Browser IDE</h1>
+        <div id="pyodide-status" class="text-yellow-400 text-sm">Waiting to start...</div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-grow flex flex-col md:flex-row overflow-hidden">
+
+        <!-- 1. File Explorer (Sidebar) -->
+        <div class="w-full md:w-64 bg-gray-800 p-4 flex flex-col flex-shrink-0 border-r border-gray-700 overflow-y-auto">
+            <h2 class="text-lg font-semibold mb-3 text-gray-300 border-b border-gray-700 pb-2">File Explorer</h2>
+
+            <!-- Main File List -->
+            <div id="file-list" class="flex-grow space-y-1 mb-4">
+                <!-- File list rendered here -->
+            </div>
+
+            <!-- Templates List -->
+            <h2 class="text-lg font-semibold mt-4 mb-3 text-gray-300 border-b border-gray-700 pb-2">Templates</h2>
+            <div id="template-list" class="space-y-1 mb-4">
+                <!-- Templates rendered here -->
+            </div>
+
+            <!-- Actions -->
+            <div class="space-y-2">
+                <button onclick="handleNewFile()" class="w-full bg-primary hover:bg-primary-dark text-white font-medium py-2 rounded-lg transition duration-200 shadow-md">
+                    + New File
+                </button>
+                <input type="file" id="import-file-input" accept=".py" class="hidden" onchange="handleImportFile(event)" />
+                <button onclick="document.getElementById('import-file-input').click()" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-medium py-2 rounded-lg transition duration-200 shadow-md">
+                    Import .py
+                </button>
+                <button id="export-btn" onclick="handleExportFile()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-medium py-2 rounded-lg transition duration-200 shadow-md" disabled>
+                    Export Current File
+                </button>
+                <button onclick="handleShowPackages()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-medium py-2 rounded-lg transition duration-200 shadow-md">
+                    View Packages List
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. Editor and Console (Main Area) -->
+        <div class="flex-grow flex flex-col overflow-hidden">
+            <!-- Top Bar: Current File & Run/Install Buttons -->
+            <div class="bg-gray-700 p-2 flex items-center justify-between shadow-inner">
+                <span id="current-file-display" class="font-mono text-sm text-gray-300"></span>
+                <div class="flex space-x-3">
+                    <button id="install-btn" onclick="handleInstallPackage()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-1 px-4 rounded-lg transition duration-200 shadow-lg flex items-center text-sm" disabled>
+                        Install Package
+                    </button>
+                    <button id="run-btn" onclick="runCode()" class="bg-green-600 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-lg transition duration-200 shadow-lg flex items-center" disabled>
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"/></svg>
+                        Run Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- Code Editor Area -->
+            <textarea id="editor" class="flex-grow bg-editor-bg text-gray-200 p-4 font-mono text-sm resize-none outline-none border-t border-gray-700 leading-relaxed"></textarea>
+
+            <!-- Output Console Area -->
+            <div class="h-48 bg-console-bg p-3 text-xs flex flex-col border-t border-gray-700">
+                <h3 class="text-sm font-semibold mb-1 text-gray-400">Output Console</h3>
+                <textarea id="output" class="flex-grow bg-console-bg text-green-400 p-1 font-mono resize-none outline-none overflow-y-auto" readonly placeholder="Program output will appear here..."></textarea>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Simple Modal for Prompts/Alerts (Replacing alert/prompt) -->
+<div id="modal-container" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-2xl w-96 max-w-full">
+        <h3 id="modal-title" class="text-xl font-bold mb-4 text-white">Title</h3>
+        <p id="modal-message" class="mb-4 text-gray-300">Message</p>
+        <input type="text" id="modal-input" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg text-white mb-4 hidden" />
+        <div class="flex justify-end space-x-3">
+            <button id="modal-cancel" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg text-white transition duration-200 hidden">Cancel</button>
+            <button id="modal-confirm" class="px-4 py-2 bg-primary hover:bg-primary-dark rounded-lg text-white transition duration-200">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- Dedicated Modal for Packages List (Larger) -->
+<div id="packages-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-3xl h-[80vh] flex flex-col">
+        <h3 class="text-2xl font-bold mb-4 text-white border-b border-gray-700 pb-2">Popular Python Packages</h3>
+        <input type="text" id="package-search" placeholder="Search packages..." class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white mb-4 outline-none focus:ring-2 focus:ring-primary" />
+
+        <div id="package-list-content" class="flex-grow overflow-y-auto space-y-3 pr-2">
+            <!-- Package list dynamically rendered here -->
+        </div>
+
+        <div class="flex justify-end mt-4">
+            <button onclick="document.getElementById('packages-modal').classList.add('hidden')" class="px-6 py-2 bg-primary hover:bg-primary-dark rounded-lg text-white font-medium transition duration-200">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Global State and Initialization ---
+    let pyodide = null;
+    let currentFile = 'main.py';
+    let fileState = {
+        'main.py': '# Start coding here!\nprint("Hello from main.py!")'
+    };
+    const editor = document.getElementById('editor');
+    const runBtn = document.getElementById('run-btn');
+    const installBtn = document.getElementById('install-btn');
+    const exportBtn = document.getElementById('export-btn');
+
+    // --- Py-Clicker Game Logic (Runs while loading) ---
+    let clickCount = 0;
+    let gameRunning = true;
+
+    function handleGameClick() {
+        if (!gameRunning) return;
+        clickCount++;
+        document.getElementById('click-count').textContent = clickCount;
+        // Simple visual feedback using Tailwind transforms
+        const btn = document.getElementById('click-button');
+        // Briefly push the button down
+        btn.classList.add('scale-[0.98]');
+        setTimeout(() => {
+            btn.classList.remove('scale-[0.98]');
+        }, 100);
+    }
+
+    // --- Templates and Packages Data (Unchanged) ---
+
+    const templates = {
+        'discord_bot.py': {
+            name: 'Discord Bot (Mockup)',
+            content: `# WARNING: This template only demonstrates the structure.\n# Discord bots require network sockets which are not supported in the browser's Pyodide environment.\n# You must run this code locally to interact with Discord.\n\n# pip install discord.py\nimport os\n\n# This is a very simple command-based bot\n# TOKEN = os.environ.get('DISCORD_TOKEN')\nTOKEN = "YOUR_DISCORD_BOT_TOKEN"\n\nclass MyClient(discord.Client):\n    async def on_ready(self):\n        print(f'Logged on as {self.user}!')\n\n    async def on_message(self, message):\n        # Don't respond to ourselves\n        if message.author == self.user:\n            return\n\n        if message.content == '!hello':\n            await message.channel.send(f'Hello, {message.author.name}!')\n\n# client = MyClient()\n# client.run(TOKEN}`
+        },
+        'rogue_rpg.py': {
+            name: 'Rogue-like RPG (ASCII)',
+            content: `# Simple ASCII Rogue-like RPG (Console Game)\n\nimport random\n\n# Game State\nplayer_hp = 20\nenemy_hp = 15\nplayer_gold = 0\n\ndef display_status():\n    print("-" * 20)\n    print(f"Player HP: {player_hp}, Gold: {player_gold}")\n    print(f"Monster HP: {enemy_hp}")\n    print("-" * 20)\n\ndef combat_turn():\n    global player_hp, enemy_hp, player_gold\n\n    # Player attacks\n    player_damage = random.randint(3, 6)\n    enemy_hp -= player_damage\n    print(f"You strike the monster for {player_damage} damage!")\n\n    if enemy_hp <= 0:\n        gold_found = random.randint(5, 15)\n        player_gold += gold_found\n        print(f"The monster is defeated! You found {gold_found} gold.")\n        return True # Combat ended\n\n    # Monster attacks\n    monster_damage = random.randint(2, 5)\n    player_hp -= monster_damage\n    print(f"The monster hits you for {monster_damage} damage!")\n\n    if player_hp <= 0:\n        print("You have been defeated...")\n        return True # Combat ended\n\n    return False # Combat continues\n\n# Main Game Loop (Simplified)\nprint("A wild monster appears!")\nwhile player_hp > 0 and enemy_hp > 0:\n    display_status()\n    combat_ended = combat_turn()\n    if combat_ended: break\n    # Simulate user waiting/input for turn-based combat\n    # In Pyodide, we can't wait for input, so we run one turn until an end state.\n\nprint("Game Over.")`
+        },
+        'ascii_game.py': {
+            name: 'ASCII Art Game/Animation',
+            content: `# Simple ASCII Art Animation/Screen\n\nimport time\n\nframes = [\n    r'''\n  (o)  \n / | \\ \n  / \\\n''',\n    r'''\n  \\o/\n   |\n  / \\\n''',\n    r'''\n  (o)  \n /|\\ \n  / \\\n''',\n]\n\n# The Pyodide console is not a true TTY, so this won't animate, \n# but it demonstrates the ASCII art principle for console games.\n\nfor i in range(5):\n    # print('\\033[H\\033[J') # Clear screen - may not work in all environments\n    print(f\"--- Frame {i+1} ---\\n\")\n    print(frames[i % len(frames)])\n    # time.sleep(0.5) # Time sleep is blocked/slowed in Pyodide main thread\n\nprint(\"ASCII Art display finished.\")`
+        },
+        'snake_game.py': {
+            name: 'Snake Game Logic (Console)',
+            content: `# Snake Game Logic (Console-based)\n\n# This is the core logic; a full, responsive game loop requires a different approach.\n\nBOARD_SIZE = 10\nsnake = [(5, 5), (5, 6), (5, 7)] # (row, col)\nfood = (2, 2)\ndirection = 'UP' # UP, DOWN, LEFT, RIGHT\n\ndef move_snake():\n    global direction, food\n    head_r, head_c = snake[0]\n\n    if direction == 'UP': new_head = (head_r - 1, head_c)\n    elif direction == 'DOWN': new_head = (head_r + 1, head_c)\n    elif direction == 'LEFT': new_head = (head_r, head_c - 1)\n    elif direction == 'RIGHT': new_head = (head_r, head_c + 1)\n\n    # Collision check\n    if new_head[0] < 0 or new_head[0] >= BOARD_SIZE or \\\n       new_head[1] < 0 or new_head[1] >= BOARD_SIZE or \\\n       new_head in snake:\n        print(\"Game Over: Collision!\")\n        return False\n\n    snake.insert(0, new_head)\n\n    # Eating food\n    if new_head == food:\n        # Generate new food location (simple version)\n        new_food_loc = (3, 3) # Fixed for simple example\n        food = new_food_loc\n        print(\"Yum! Snake grew.\")\n    else:\n        # Remove tail only if no food was eaten\n        snake.pop()\n\n    return True\n\n# Example of movement (5 turns)\nprint(\"Snake Game Starting...\")\nfor move in ['UP', 'UP', 'LEFT', 'LEFT', 'RIGHT']:\n    direction = move\n    if not move_snake(): break\n    print(f\"After {move}: Snake Head at {snake[0]}. Length: {len(snake)}\")\n\nprint(f\"Final Snake Position: {snake}\")`
+        }
+    };
+
+    const packages = {
+        'numpy': 'Fundamental package for scientific computing with Python. Provides powerful N-dimensional array objects and functions.',
+        'pandas': 'A fast, powerful, flexible and easy to use open source data analysis and manipulation tool.',
+        'matplotlib': 'A comprehensive library for creating static, animated, and interactive visualizations in Python.',
+        'requests': 'An elegant and simple HTTP library for Python, used for making web requests.',
+        'flask': 'A micro web framework for Python. Great for building small, lightweight web applications and APIs.',
+        'django': 'A high-level Python Web framework that encourages rapid development and clean, pragmatic design.',
+        'scikit-learn': 'A machine learning library featuring various classification, regression and clustering algorithms.',
+        'beautifulsoup4': 'Used for pulling data out of HTML and XML files (web scraping).',
+        'sqlalchemy': 'The Python SQL Toolkit and Object Relational Mapper (ORM).',
+        'pillow (PIL)': 'The Python Imaging Library (PIL) adds image processing capabilities to your Python interpreter.',
+        'lxml': 'A very fast and feature-rich library for processing XML and HTML in Python.',
+        'pygments': 'A generic syntax highlighter for various languages.',
+        'jupyter': 'An interactive computing environment (e.g., Jupyter Notebooks).',
+        'scipy': 'A library used for scientific and technical computing, building on NumPy.',
+        'statsmodels': 'Provides classes and functions for the estimation of many different statistical models.',
+        'nltk': 'Natural Language Toolkit, a leading platform for building Python programs to work with human language data.',
+        'spacy': 'Industrial-strength Natural Language Processing (NLP) in Python.',
+        'selenium': 'Automates browsers for web testing and automation.',
+        'cryptography': 'A library that provides cryptographic recipes and primitives.',
+        'typing': 'Support for type hints in Python (for static type checking).',
+        'pytest': 'A mature full-featured Python testing framework.',
+        'virtualenv': 'A tool to create isolated Python environments.',
+        'pipenv': 'A tool that aims to bring the best of all packaging worlds to the Python world.',
+        'tqdm': 'A fast, extensible progress bar for loops and iterables.',
+        'click': 'A package for creating beautiful command line interfaces.',
+        'rich': 'A library for writing rich text (colors, styles, tables, progress bars) in the terminal.',
+        'pydantic': 'Data validation and settings management using Python type hints.',
+        'fastapi': 'A modern, fast (high-performance) web framework for building APIs with Python 3.7+ based on standard Python type hints.',
+        'requests-html': 'HTML Parsing for Humans.',
+        'openpyxl': 'A Python library to read/write Excel 2010 xlsx/xlsm/xltx/xltm files.',
+        'pyyaml': 'A YAML parser and emitter for Python.',
+        'boto3': 'The Amazon Web Services (AWS) SDK for Python.'
+        // Note on discord.py: It is generally not compiled for Pyodide and requires network access, hence it's not listed here as directly installable.
+    };
+
+
+    /**
+     * Shows a custom modal dialog for alerts or prompts.
+     * @param {string} title
+     * @param {string} message
+     * @param {string} inputPlaceholder - If provided, shows an input field (Prompt mode).
+     * @returns {Promise<string | boolean>} - Returns the input value or true/false for confirmation/alert.
+     */
+    function showModal(title, message, inputPlaceholder = null) {
+        return new Promise(resolve => {
+            const container = document.getElementById('modal-container');
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+
+            const input = document.getElementById('modal-input');
+            const confirmBtn = document.getElementById('modal-confirm');
+            const cancelBtn = document.getElementById('modal-cancel');
+
+            // Setup input field for prompt
+            if (inputPlaceholder !== null) {
+                input.value = '';
+                input.placeholder = inputPlaceholder;
+                input.classList.remove('hidden');
+                cancelBtn.classList.remove('hidden');
+            } else {
+                input.classList.add('hidden');
+                cancelBtn.classList.add('hidden');
+            }
+
+            // Event listeners
+            const handleConfirm = () => {
+                cleanup();
+                if (inputPlaceholder !== null) {
+                    resolve(input.value.trim());
+                } else {
+                    resolve(true); // Alert mode confirmation
+                }
+            };
+
+            const handleCancel = () => {
+                cleanup();
+                resolve(false); // Prompt/Confirm canceled
+            };
+
+            // Cleanup and hide the modal
+            const cleanup = () => {
+                confirmBtn.removeEventListener('click', handleConfirm);
+                cancelBtn.removeEventListener('click', handleCancel);
+                container.classList.add('hidden');
+            };
+
+            confirmBtn.addEventListener('click', handleConfirm);
+            cancelBtn.addEventListener('click', handleCancel);
+
+            container.classList.remove('hidden');
+            if (inputPlaceholder !== null) {
+                input.focus();
+            } else {
+                confirmBtn.focus();
+            }
+        });
+    }
+    
+    /** * Updates the progress bar and status text on the loading screen. 
+     * @param {number} percentage - The new percentage (0-100).
+     * @param {string} statusText - The descriptive text for the current status.
+     */
+    function updateProgressBar(percentage, statusText) {
+        const fill = document.getElementById('progress-bar-fill');
+        const percentText = document.getElementById('progress-percentage');
+        const status = document.getElementById('loading-status-text');
+
+        fill.style.width = `${percentage}%`;
+        percentText.textContent = `${percentage}%`;
+        status.textContent = statusText;
+
+        // Change color on completion
+        if (percentage >= 100) {
+            fill.classList.remove('bg-green-500');
+            fill.classList.add('bg-primary');
+        } else {
+             fill.classList.remove('bg-primary');
+             fill.classList.add('bg-green-500');
+        }
+    }
+
+
+    // --- Pyodide Initialization ---
+    async function initializePyodide() {
+        const headerStatus = document.getElementById('pyodide-status');
+        const loadingScreen = document.getElementById('loading-screen');
+
+        try {
+            headerStatus.textContent = 'Loading Pyodide...';
+            updateProgressBar(10, 'Starting Pyodide core download...');
+
+            pyodide = await loadPyodide({
+                indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/"
+            });
+            
+            updateProgressBar(60, 'Core interpreter loaded. Loading package manager (micropip)...');
+            // Ensure micropip is loaded for package management
+            await pyodide.loadPackage("micropip");
+
+            updateProgressBar(90, 'Package manager loaded. Setting up virtual file system...');
+
+            // Write initial files to the Pyodide VFS
+            await updateVFS();
+            renderFileList();
+            renderTemplatesList();
+            loadCurrentFile();
+            
+            headerStatus.textContent = 'Python Ready';
+            updateProgressBar(100, 'Setup complete! IDE is ready to use.');
+            
+            runBtn.disabled = false;
+            installBtn.disabled = false;
+            exportBtn.disabled = false;
+            
+            // NEW: Hide Loading Screen and stop game
+            gameRunning = false;
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                showModal('Game Over!', `Python IDE is ready! You achieved ${clickCount} clicks in the Py-Clicker game.`);
+            }, 500); // Wait for transition fade-out
+
+        } catch (error) {
+            headerStatus.textContent = 'Error loading Python!';
+            updateProgressBar(0, 'Initialization failed!');
+            document.getElementById('output').value = `Failed to load Pyodide: ${error.message}`;
+            gameRunning = false; // Stop game on error
+        }
+    }
+
+    // --- File System Management ---
+
+    /** Renders the list of files in the explorer panel. */
+    function renderFileList() {
+        const fileListElement = document.getElementById('file-list');
+        fileListElement.innerHTML = '';
+        const filenames = Object.keys(fileState).sort();
+
+        filenames.forEach(filename => {
+            const isActive = filename === currentFile;
+            const item = document.createElement('div');
+            item.className = `flex items-center justify-between p-2 rounded-lg cursor-pointer transition duration-150 ${
+                isActive ? 'bg-gray-600 text-white shadow-inner' : 'hover:bg-gray-700 text-gray-300'
+            }`;
+
+            // File Name Button (Select)
+            const nameBtn = document.createElement('span');
+            nameBtn.className = 'truncate flex-grow mr-2 font-mono text-sm';
+            nameBtn.textContent = filename;
+            nameBtn.onclick = () => handleSelectFile(filename);
+
+            item.appendChild(nameBtn);
+
+            // Action Buttons Container
+            const actions = document.createElement('div');
+            actions.className = 'flex space-x-1';
+
+            // Rename Button
+            const renameBtn = createIconButton('✏️', `handleRenameFile('${filename}')`, 'Rename');
+            actions.appendChild(renameBtn);
+
+            // Delete Button
+            if (filenames.length > 1) { // Prevent deleting the last file
+                const deleteBtn = createIconButton('🗑️', `handleDeleteFile('${filename}')`, 'Delete');
+                actions.appendChild(deleteBtn);
+            }
+
+            item.appendChild(actions);
+            fileListElement.appendChild(item);
+        });
+    }
+
+    /** Renders the list of templates in the explorer panel. */
+    function renderTemplatesList() {
+        const templateListElement = document.getElementById('template-list');
+        templateListElement.innerHTML = '';
+
+        for (const filename in templates) {
+            const templateData = templates[filename];
+            const item = document.createElement('div');
+            item.className = `p-2 rounded-lg cursor-pointer hover:bg-gray-700 text-gray-300 transition duration-150 text-sm`;
+            item.textContent = templateData.name;
+            item.setAttribute('title', `Create a new file from the ${templateData.name} template.`);
+            item.onclick = () => handleLoadTemplate(filename, templateData.content);
+            templateListElement.appendChild(item);
+        }
+    }
+
+
+    /** Helper to create an action button */
+    function createIconButton(icon, action, tooltip) {
+        const btn = document.createElement('button');
+        btn.innerHTML = icon;
+        btn.className = 'text-xs p-1 rounded-full hover:bg-gray-500 transition duration-150';
+        btn.setAttribute('title', tooltip);
+        btn.setAttribute('onclick', action);
+        return btn;
+    }
+
+    /** Saves current editor content to the file state and updates Pyodide VFS */
+    async function saveCurrentFile() {
+        fileState[currentFile] = editor.value;
+        if (pyodide) {
+             // Write the specific file to the VFS
+            pyodide.FS.writeFile(currentFile, editor.value, { encoding: 'utf8' });
+        }
+    }
+
+    /** Updates the VFS with ALL files from the fileState. */
+    async function updateVFS() {
+        if (!pyodide) return;
+        for (const filename in fileState) {
+            pyodide.FS.writeFile(filename, fileState[filename], { encoding: 'utf8' });
+        }
+    }
+
+    /** Loads content of the currently selected file into the editor. */
+    function loadCurrentFile() {
+        editor.value = fileState[currentFile] || '';
+        document.getElementById('current-file-display').textContent = `Editing: /${currentFile}`;
+    }
+
+    /** Handles selection of a new file from the explorer. */
+    async function handleSelectFile(filename) {
+        if (filename === currentFile) return;
+
+        // 1. Save content of the *old* file before switching
+        await saveCurrentFile();
+
+        // 2. Switch context
+        currentFile = filename;
+
+        // 3. Load content of the *new* file
+        loadCurrentFile();
+
+        // 4. Re-render list to highlight new file
+        renderFileList();
+    }
+
+    /** Prompts for a new file name and creates the file. */
+    async function handleNewFile() {
+        const newFileName = await showModal('New File', 'Enter the name for your new Python file:', 'untitled.py');
+
+        if (!newFileName) return;
+
+        const normalizedName = newFileName.endsWith('.py') ? newFileName : newFileName + '.py';
+
+        if (fileState[normalizedName]) {
+            showModal('Error', `File "${normalizedName}" already exists.`);
+            return;
+        }
+
+        fileState[normalizedName] = '# New Python file\n';
+        await updateVFS(); // Update VFS
+        handleSelectFile(normalizedName); // Select and load the new file
+        renderFileList();
+    }
+
+    /** Loads a template into a new file. */
+    async function handleLoadTemplate(templateFilename, content) {
+        if (fileState[templateFilename]) {
+            const confirmed = await showModal('Overwrite File?', `File "${templateFilename}" already exists. Overwrite it with the template?`);
+            if (!confirmed) return;
+        }
+
+        fileState[templateFilename] = content;
+        await updateVFS();
+        handleSelectFile(templateFilename);
+        renderFileList();
+        showModal('Template Loaded', `Template "${templates[templateFilename].name}" loaded into ${templateFilename}.`);
+    }
+
+    /** Deletes a file from the file state and VFS. */
+    async function handleDeleteFile(filename) {
+        if (Object.keys(fileState).length <= 1) {
+            showModal('Error', 'Cannot delete the last remaining file.');
+            return;
+        }
+
+        const confirmed = await showModal('Delete File', `Are you sure you want to delete "${filename}"?`);
+        if (!confirmed) return;
+
+        delete fileState[filename];
+
+        if (pyodide) {
+            try {
+                pyodide.FS.unlink(filename);
+            } catch (e) {
+                console.error('Error unlinking file from VFS:', e);
+            }
+        }
+
+        // If the deleted file was the current file, select a new one
+        if (filename === currentFile) {
+            currentFile = Object.keys(fileState)[0]; // Select the first remaining file
+            loadCurrentFile();
+        }
+
+        renderFileList();
+    }
+
+    /** Renames an existing file. */
+    async function handleRenameFile(oldName) {
+        const newFileName = await showModal('Rename File', `Enter new name for "${oldName}":`, oldName);
+
+        if (!newFileName || newFileName === oldName) return;
+
+        const normalizedName = newFileName.endsWith('.py') ? newFileName : newFileName + '.py';
+
+        if (fileState[normalizedName] && normalizedName !== oldName) {
+            showModal('Error', `File "${normalizedName}" already exists.`);
+            return;
+        }
+
+        const content = fileState[oldName];
+        delete fileState[oldName];
+        fileState[normalizedName] = content;
+
+        if (pyodide) {
+            try {
+                // Remove old file and create new one in VFS
+                pyodide.FS.unlink(oldName);
+            } catch (e) {
+                // Ignore if unlink fails, likely file wasn't created yet
+            }
+            pyodide.FS.writeFile(normalizedName, content, { encoding: 'utf8' });
+        }
+
+        if (currentFile === oldName) {
+            currentFile = normalizedName;
+            loadCurrentFile();
+        }
+
+        renderFileList();
+    }
+
+    /** Handles importing a local file. */
+    function handleImportFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const content = e.target.result;
+            const filename = file.name;
+
+            fileState[filename] = content;
+            await updateVFS();
+            handleSelectFile(filename);
+            renderFileList();
+
+            showModal('Success', `Successfully imported file: ${filename}`);
+        };
+        reader.onerror = () => {
+            showModal('Error', 'Failed to read file.');
+        };
+        reader.readAsText(file);
+    }
+
+    /** Handles exporting the currently selected file. */
+    async function handleExportFile() {
+        await saveCurrentFile(); // Ensure the latest content is in state
+
+        const content = fileState[currentFile];
+        if (!content) {
+            showModal('Error', `No content to export for ${currentFile}.`);
+            return;
+        }
+
+        const blob = new Blob([content], { type: 'text/x-python;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = currentFile;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // --- Package Management (micropip) ---
+
+    async function handleInstallPackage() {
+        const packageName = await showModal('Install Python Package', 'Enter the name of the package to install (e.g., numpy, requests):', 'package_name');
+
+        if (!packageName) return;
+
+        const outputElement = document.getElementById('output');
+        outputElement.value += `\nInstalling package: ${packageName}...\n`;
+        runBtn.disabled = true;
+        installBtn.disabled = true;
+
+        try {
+            await pyodide.runPythonAsync(`
+                import micropip
+                # Ensure wheel is available before installing.
+                # In Pyodide v0.25.0, packages like numpy and requests are usually pre-built.
+                await micropip.install('${packageName}')
+            `);
+            outputElement.value += `Successfully installed ${packageName}!\n`;
+        } catch (error) {
+            outputElement.value += `\n--- Installation Failed ---\nCould not install ${packageName}. Error: ${error.message || error}\n`;
+        } finally {
+            runBtn.disabled = false;
+            installBtn.disabled = false;
+        }
+    }
+
+    function handleShowPackages() {
+        const modal = document.getElementById('packages-modal');
+        const listContent = document.getElementById('package-list-content');
+        const searchInput = document.getElementById('package-search');
+
+        const renderList = (searchTerm = '') => {
+            listContent.innerHTML = '';
+            const lowerCaseSearch = searchTerm.toLowerCase();
+
+            let matches = Object.entries(packages)
+                .filter(([pkgName, pkgDesc]) => 
+                    pkgName.toLowerCase().includes(lowerCaseSearch) || 
+                    pkgDesc.toLowerCase().includes(lowerCaseSearch)
+                );
+
+            if (matches.length === 0) {
+                listContent.innerHTML = '<p class="text-gray-400 text-center mt-8">No packages match your search criteria.</p>';
+                return;
+            }
+
+            matches.forEach(([pkgName, pkgDesc]) => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-gray-700 rounded-lg shadow-md hover:bg-gray-600 transition duration-150';
+                item.innerHTML = `
+                    <h4 class="text-primary font-bold text-lg mb-1">${pkgName}</h4>
+                    <p class="text-gray-300 text-sm">${pkgDesc}</p>
+                `;
+                listContent.appendChild(item);
+            });
+        };
+
+        // Initial render
+        renderList();
+
+        // Search functionality
+        searchInput.oninput = (e) => renderList(e.target.value);
+
+        modal.classList.remove('hidden');
+        searchInput.focus();
+    }
+
+
+    // --- Python Execution Logic ---
+
+    async function runCode() {
+        if (!pyodide) {
+            document.getElementById('output').value = 'Python interpreter is not ready.';
+            return;
+        }
+
+        // 1. Save current editor content and update VFS with all files
+        await saveCurrentFile();
+        await updateVFS();
+
+        const code = editor.value;
+        const outputElement = document.getElementById('output');
+        outputElement.value = 'Running...\n';
+        runBtn.disabled = true; // Disable button while running
+        installBtn.disabled = true;
+
+
+        let capturedOutput = '';
+        let errorOccurred = false;
+
+        // Custom function to capture stdout: Pyodide passes strings here by default.
+        const stdout = (text) => {
+            // Append the text block, ensuring a newline for each call if the text doesn't end with one,
+            // or if we want standard print behavior (print() adds a newline).
+            capturedOutput += text + (text.endsWith('\n') ? '' : '\n');
+        };
+
+        // Custom function to capture stderr: Pyodide passes strings here by default.
+        const stderr = (text) => {
+            capturedOutput += `ERROR: ${text}\n`;
+            errorOccurred = true;
+        };
+
+        try {
+            // Set up stdout/stderr redirection
+            pyodide.setStdout(stdout);
+            pyodide.setStderr(stderr);
+
+            // The code is executed in the context of the main Pyodide module
+            await pyodide.runPythonAsync(code);
+
+        } catch (error) {
+            // This catches Python exceptions that weren't caught by stderr redirection
+            // or JS/Pyodide related exceptions.
+            capturedOutput += `\n--- Unhandled Execution Exception ---\n${error.message || error}\n`;
+            errorOccurred = true;
+        } finally {
+            // Restore default stdout/stderr by resetting to null (default behavior)
+            pyodide.setStdout(null);
+            pyodide.setStderr(null);
+
+            // Display results
+            outputElement.value = (errorOccurred ? '*** EXECUTION FAILED ***\n' : '*** EXECUTION SUCCESSFUL ***\n') + capturedOutput;
+            runBtn.disabled = false;
+            installBtn.disabled = false;
+        }
+    }
+
+    // --- Start Application ---
+    window.onload = initializePyodide;
+
+</script>
+</body>
+</html>

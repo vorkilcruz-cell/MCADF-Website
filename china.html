@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Minecraft: China Edition - An In-Depth Look</title>
+<style>
+/* CSS Variables for a clean palette */
+:root {
+  --color-primary: #2196F3; /* Bright Blue */
+  --color-accent: #FFCA28; /* Gold/Yellow */
+  --color-dark-bg: #1A1A1A; /* Base dark background */
+  --color-text: #E0E0E0;
+  --color-secondary-text: #AAAAAA;
+  --color-section-bg: #212121; /* Slightly raised dark panel */
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  background: var(--color-dark-bg);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+  transition: background 0.5s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem; 
+  transition: all 0.3s ease;
+}
+
+header {
+  background: linear-gradient(135deg, #1e88e5, var(--color-primary));
+  padding: 2.5rem 0;
+  text-align: center;
+  color: white;
+  font-weight: 800;
+  font-size: 2.5rem;
+  letter-spacing: 0.1em;
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+  margin-bottom: 2.5rem;
+  transition: all 0.3s ease;
+}
+
+section {
+  margin-bottom: 2rem;
+  background: var(--color-section-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 1.5rem 0;
+  overflow: hidden; 
+  transition: all 0.3s ease;
+}
+
+h2 {
+  color: var(--color-primary);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-left: 5px solid var(--color-accent);
+  padding-left: 1.5rem;
+  padding-bottom: 0;
+  font-weight: 700;
+  font-size: 1.8rem;
+  transition: all 0.3s ease;
+}
+
+p {
+  margin-bottom: 1rem;
+  padding: 0 1.5rem; 
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.highlight {
+  color: var(--color-accent);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0 1.5rem;
+}
+
+li {
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    transition: color 0.3s ease;
+}
+
+.video-list p {
+    padding: 0; 
+    margin: 0;
+    color: var(--color-secondary-text);
+    font-size: 0.95rem;
+    padding-left: 1.5rem;
+}
+
+.controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.language-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* --- MODERN BUTTON STYLE ("Frosted Glass") --- */
+.lang-btn, .modal-btn {
+  --btn-text-color: #ffffff;
+  --btn-bg-color: rgba(255, 255, 255, 0.1);
+
+  background: var(--btn-bg-color);
+  color: var(--btn-text-color);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.6rem 1.0rem;
+  cursor: pointer;
+  border-radius: 50px; 
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease,
+              color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  text-shadow: none; /* Reset text-shadow */
+}
+
+.lang-btn:hover, .modal-btn:hover {
+  --btn-bg-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.lang-btn.active {
+  --btn-text-color: var(--color-dark-bg);
+  --btn-bg-color: var(--color-accent);
+  box-shadow: 0 4px 8px rgba(255, 202, 40, 0.4);
+  border-color: rgba(255, 202, 40, 0.5);
+}
+
+/* Style for the "Change Style" button */
+#open-style-chooser {
+  --btn-text-color: var(--color-dark-bg);
+  --btn-bg-color: var(--color-accent);
+  border-color: rgba(255, 202, 40, 0.5);
+}
+#open-style-chooser:hover {
+  --btn-bg-color: #ffdb70;
+}
+
+
+footer {
+  margin-top: 3rem;
+  padding: 1.5rem 0;
+  text-align: center;
+  color: var(--color-secondary-text);
+  font-size: 0.9rem;
+  border-top: 1px solid #333;
+  transition: all 0.3s ease;
+}
+
+.back-button-link {
+  display: block; 
+  width: max-content;
+  margin: 2rem auto; 
+  background: #555;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  font-weight: 600;
+  text-align: center;
+}
+
+.back-button-link:hover {
+  background: #777;
+}
+
+
+/* --- MODAL STYLES --- */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: none; 
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.visible {
+  display: flex; 
+}
+
+.modal-content {
+  background: var(--color-section-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+  max-width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  width: 700px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--color-accent);
+  text-align: center;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--color-secondary-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+
+.close-modal-btn:hover {
+  color: #fff;
+}
+
+.gradient-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 0.5rem;
+}
+
+.gradient-swatch {
+  width: 100%;
+  padding-bottom: 100%; 
+  height: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid var(--color-secondary-text);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+.gradient-swatch:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.gradient-swatch.default-swatch {
+  border-style: dashed;
+}
+
+.gradient-swatch .swatch-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0 0.5rem; 
+    width: 100%;
+    box-sizing: border-box;
+    transition: color 0.3s ease;
+}
+
+/* --- CUSTOM GRADIENT CREATOR STYLES --- */
+.custom-gradient-creator {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #444;
+  transition: border-color 0.3s ease;
+}
+
+.custom-gradient-creator h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+  text-align: center;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+#custom-gradient-preview {
+  width: 50%;
+  padding-bottom: 25%; 
+  margin: 0 auto 1.5rem auto;
+  cursor: default;
+}
+#custom-gradient-preview:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+#custom-color-inputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.color-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+input[type="color"]::-webkit-color-swatch {
+  border-radius: 50%;
+  border: 2px solid #fff;
+  transition: border-color 0.3s ease;
+}
+input[type="color"]::-moz-color-swatch {
+  border-radius: 50%;
+  border: 2px solid #fff;
+  transition: border-color 0.3s ease;
+}
+
+.remove-color-btn {
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+.remove-color-btn:hover {
+  background: #ff2a2a;
+}
+.remove-color-btn:disabled {
+  background: #888;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#custom-creator-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-btn {
+  font-size: 0.9rem;
+}
+
+#add-color-btn:disabled {
+  background: #888;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#apply-custom-btn {
+  --btn-text-color: var(--color-dark-bg);
+  --btn-bg-color: var(--color-accent);
+  border-color: rgba(255, 202, 40, 0.5);
+}
+#apply-custom-btn:hover {
+  --btn-bg-color: #ffdb70;
+}
+
+
+/* --- 4399 "Classic" Theme Overrides --- */
+body.theme-classic {
+    background-color: #f0f8ff; /* Light blue page background */
+    background-image: none !important; /* Disable gradients, !important to override inline style */
+    color: #333; /* Darker text */
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; /* 4399 font */
+}
+
+/* Hide the modern gradient header */
+body.theme-classic header {
+    display: none;
+}
+
+/* Main page container */
+body.theme-classic .container {
+    background: #fff;
+    border: 2px solid #a0c4e8;
+    box-shadow: 0 0 0 4px #dcebfa, 0 0 10px rgba(0,0,0,0.1); /* Mimic 4399's complex border */
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+/* Style sections as modules */
+body.theme-classic section {
+    background: #fff;
+    border: 1px solid #dcdcdc; /* Simple border for content sections */
+    border-radius: 4px;
+    box-shadow: none;
+    padding: 0; /* Remove padding for header */
+}
+
+/* Section headers (mimicking 4399) */
+body.theme-classic h2 {
+    background: #f7f7f7;
+    border-bottom: 1px solid #dcdcdc;
+    border-left: none; /* Remove modern theme's accent border */
+    color: #ff6600; /* Orange-ish text */
+    font-size: 1.2rem;
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 1rem;
+}
+/* Re-add padding for content inside sections */
+body.theme-classic section p,
+body.theme-classic section ul {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/* Re-style links for light background */
+body.theme-classic a {
+    color: #007bff;
+}
+body.theme-classic a:hover {
+    color: #ff6600;
+}
+
+/* Re-style highlights */
+body.theme-classic .highlight {
+    color: #ff6600;
+    font-weight: bold;
+}
+
+/* Re-style list bullets */
+body.theme-classic li::before {
+    color: #ff6600;
+}
+
+/* --- Re-style Buttons (4399 Orange Pixel Style) --- */
+body.theme-classic .lang-btn, 
+body.theme-classic .modal-btn,
+body.theme-classic .back-button-link {
+    background: linear-gradient(to bottom, #ffc73c, #f78d00);
+    border: 2px solid #e28000;
+    border-bottom-color: #c06c00;
+    border-radius: 6px;
+    color: #fff !important; /* Override --btn-text-color */
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    padding: 0.6rem 1.0rem;
+    box-shadow: 0 2px 0 #c06c00;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transform: none;
+}
+
+body.theme-classic .lang-btn:hover, 
+body.theme-classic .modal-btn:hover,
+body.theme-classic .back-button-link:hover {
+    background: linear-gradient(to bottom, #ffcf54, #f89613);
+    transform: none;
+    box-shadow: 0 2px 0 #c06c00;
+}
+
+body.theme-classic .lang-btn:active, 
+body.theme-classic .modal-btn:active,
+body.theme-classic .back-button-link:active {
+    transform: translateY(2px);
+    box-shadow: none !important;
+}
+
+/* Active language button */
+body.theme-classic .lang-btn.active {
+    background: linear-gradient(to bottom, #f89613, #ffcf54);
+    color: #fff !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 0 0 1px #c06c00 !important;
+    transform: translateY(1px);
+}
+
+/* Back button needs display: table to center correctly */
+body.theme-classic .back-button-link {
+    display: table;
+    width: auto;
+}
+
+/* --- Re-style Modal --- */
+body.theme-classic .modal-overlay {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+body.theme-classic .modal-content {
+    background: #fff;
+    border: 2px solid #a0c4e8;
+    color: #333;
+}
+
+body.theme-classic .modal-content h3 {
+    color: #ff6600;
+}
+
+body.theme-classic .close-modal-btn {
+    color: #888;
+}
+body.theme-classic .close-modal-btn:hover {
+    color: #333;
+}
+
+body.theme-classic .gradient-swatch {
+    border-color: #aaa;
+}
+body.theme-classic .gradient-swatch .swatch-label {
+    color: #333;
+}
+
+body.theme-classic .custom-gradient-creator {
+    border-top-color: #eee;
+}
+body.theme-classic .custom-gradient-creator h4 {
+    color: #333;
+}
+
+body.theme-classic input[type="color"]::-webkit-color-swatch {
+  border: 2px solid #555;
+}
+body.theme-classic input[type="color"]::-moz-color-swatch {
+  border: 2px solid #555;
+}
+
+/* --- Footer --- */
+body.theme-classic footer {
+    color: #777;
+    border-top-color: #eee;
+}
+
+
+</style>
+</head>
+<body>
+
+<header>Minecraft: China Edition - A Comprehensive Overview</header>
+
+<div class="container">
+
+<div class="controls-container">
+  <div class="language-switcher" aria-label="Language switcher">
+    <button class="lang-btn active" data-lang="en" aria-pressed="true">English</button>
+    <button class="lang-btn" data-lang="fil" aria-pressed="false">Filipino</button>
+    <button class="lang-btn" data-lang="zh" aria-pressed="false">简体中文</button>
+    <button class="lang-btn" data-lang="es" aria-pressed="false">Español</button>
+    <button class="lang-btn" data-lang="de" aria-pressed="false">Deutsch</button>
+    <button class="lang-btn" data-lang="ru" aria-pressed="false">Русский</button>
+  </div>
+  
+  <button id="open-style-chooser" class="lang-btn" data-lang-key="changeStyle">🎨 Change Style</button>
+  <button id="theme-toggle-btn" class="lang-btn" data-lang-key="toggleTheme">Toggle Theme</button>
+</div>
+
+
+<div class="content lang-en">
+  <section>
+    <h2>Introduction to Minecraft: China Edition</h2>
+    <p><span class="highlight">Minecraft: China Edition</span> is a unique, localized version of the globally acclaimed Minecraft game. Developed in partnership between Mojang Studios and the Chinese tech company NetEase, this edition blends the classic elements of both the Java and Bedrock versions, tailored specifically for players in mainland China. Unlike the international editions, Minecraft China integrates localized content, strict regulatory compliance such as real-name registration, and censorship protocols, giving it a distinct identity within the Minecraft universe.</p>
+    <p>This version is exclusive to China and requires a verified Chinese ID for access, limiting its availability outside the country. Its interface is fully in Simplified Chinese and includes a modified social and multiplayer system, allowing cross-platform play with unique Chinese-themed servers and mod support through a built-in patch system.</p>
+  </section>
+
+  <section>
+    <h2>Exclusive Features and Gameplay</h2>
+    <p>Minecraft: China Edition introduces over 50 exclusive features that set it apart from other editions. Among them are custom game modes like the highly popular <em>Apocalypse Mode</em>, which includes new biomes such as the chaotic Misty Forest, custom bosses, and unique gear sets not found elsewhere.</p>
+    <p>Players experience innovative gameplay elements including new mobs inspired by Chinese mythology (such as Kirins), special weapons, and armor sets, plus extensive mod support embedded directly into the launcher. Regular community events and a dedicated in-game marketplace—with emeralds and diamonds as currency instead of Minecoins—offer both cosmetic and gameplay content. The marketplace also encourages daily engagement through ad-watching rewards and scratch card mechanics.</p>
+    <p>Notably, the Bedrock side of this edition features touch control optimizations for mobile players and complies with regulatory standards by integrating chat filters and content moderation.</p>
+  </section>
+
+  <section>
+    <h2>Minecraft: China Developer Edition and Education Edition</h2>
+    <p>Beyond the player edition, Minecraft: China also offers a <strong>Developer Edition</strong> that enables creators to build custom content within the framework approved by Chinese authorities. This edition offers advanced modding tools and access to Chinese-specific APIs, supporting an ecosystem of modders and server admins who develop regionally-tailored Minecraft experiences.</p>
+    <p>The <strong>Education Edition</strong> of Minecraft in China is a significant part of the country's push for innovative learning. In partnership with Microsoft and key educational institutions, this edition provides curated lesson plans and immersive learning worlds. Programs such as Minecraft: Education Edition Summer Camps allow students to explore scientific concepts, environmental challenges, and creative problem-solving within Minecraft's sandbox environment. These initiatives integrate local pedagogy with internationally recognized educational standards.</p>
+  </section>
+
+  <section>
+    <h2>Accessing Minecraft China on 4399</h2>
+    <p>To dive into Minecraft China Edition through the popular 4399 platform, players need to create a <strong>4399 account</strong>. Creating an account is free and can be done safely by visiting the official 4399 games portal. Individual sharing of accounts is discouraged to protect user security and privacy.</p>
+    <p>You can register or log in using the 4399 homepage or the Minecraft China-specific page: <a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">Minecraft Download & Guide - 4399 Official Minecraft Portal</a></p>
+    <p>This portal provides the latest official downloads, comprehensive strategy guides, popular server lists, and community events. It is the best entry point for new and returning players to get started with Minecraft China Edition on PC.</p>
+  </section>
+
+  <section>
+    <h2>Videos of Gameplay and Trailers</h2>
+    <p>The official trailer titled <a href="https://v.4399pk.com/wdshijie/video_414116.htm" target="_blank" rel="noopener noreferrer">最强发型师伍六七来袭！开启全新冒险之旅！</a> available on 4399's video platform showcases the game's unique adventure modes and engaging storylines.</p>
+
+    <ul class="video-list">
+        <li>
+            <a href="https://www.youtube.com/watch?v=nnToRbNfL2U" target="_blank" rel="noopener noreferrer">I Survived 100 Days In Minecraft China Edition</a>
+            <p>— A popular '100 Days' challenge video featuring exclusive China Edition content like the Misty Forest biome.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=HTU-O_R-Puc" target="_blank" rel="noopener noreferrer">I Beat Minecraft China Edition</a>
+            <p>— A full playthrough demonstrating the unique progression and challenges required to complete this edition.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=C5axrQ9IQ5M" target="_blank" rel="noopener noreferrer">Minecraft China Official Trailer</a>
+            <p>— The official promotional video showcasing the blend of Java and Bedrock features and localized content.</p>
+        </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Official Chinese Portals and Resources</h2>
+    <p>The official Chinese portals such as <a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">我的世界官网 (Minecraft official site on 4399)</a> provide downloads, guides, and detailed strategy articles specifically for Minecraft China players. These resources include exclusive content updates, server information, and tutorials helping players maximize their gaming experience within this version.</p>
+  </section>
+</div>
+
+<div class="content lang-fil" style="display:none;">
+  <section>
+    <h2>Panimula sa Minecraft: China Edition</h2>
+    <p><span class="highlight">Minecraft: China Edition</span> ay isang natatanging, localized na bersyon ng globally sikat na laro na Minecraft. Ito ay ginawa sa pakikipagtulungan ng Mojang Studios at ng Chinese tech company na NetEase, at pinaghalo ang klasikong mga elemento ng Java at Bedrock versions, na iniangkop para sa mga manlalaro sa mainland China. Hindi tulad ng internasyonal na edisyon, isinasama ng Minecraft China ang localized na nilalaman, mahigpit na pagsunod sa regulasyon tulad ng real-name registration, at censorship protocols, na nagbibigay dito ng isang natatanging pagkakakilanlan.</p>
+    <p>Eksklusibo ang bersyong ito sa China at kinakailangan ang naka-verify na Chinese ID para makapaglaro, kaya limitado ang availability nito sa labas ng bansa. Buong-interface nito ay nasa **Simplified Chinese**, kasama ang modified social at multiplayer system na nagpapahintulot ng **cross-platform play** sa mga Chinese-themed server at mod support sa pamamagitan ng built-in na patch system.</p>
+  </section>
+
+  <section>
+    <h2>Natanging mga Tampok at Laro</h2>
+    <p>May higit sa **50 natatanging tampok** ang Minecraft: China Edition na nagpapasikat dito. Kabilang dito ang custom game modes tulad ng sikat na <em>Apocalypse Mode</em>, na may mga bagong biomes gaya ng magulong Misty Forest, natatanging mga boss, at mga **exclusive gear sets** na di matatagpuan sa ibang Edition.</p>
+    <p>Makakaranas ang mga manlalaro ng mga makabagong elemento ng gameplay kabilang ang mga bagong mobs na hango sa **Chinese mythology** (tulad ng Kirins), special weapons, at armor sets. Mayroong marketplace gamit ang **emerald at diamond** bilang currency imbes na Minecoins, pati na rin mga pang-araw-araw na engagement reward mechanics tulad ng ad-watching at scratch card.</p>
+    <p>Kapansin-pansin, ang Bedrock side ng edisyong ito ay nagtatampok ng **touch control optimizations** para sa mga mobile players at sumusunod sa mga regulatory standard sa pamamagitan ng pag-integrate ng chat filters at content moderation.</p>
+  </section>
+
+  <section>
+    <h2>Developer Edition at Education Edition ng Minecraft China</h2>
+    <p>Bukod sa player edition, nag-aalok din ang Minecraft: China ng **Developer Edition** na nagbibigay-daan sa mga creator na bumuo ng custom content sa loob ng framework na inaprubahan ng Chinese authorities. Nag-aalok ito ng advanced modding tools at access sa **Chinese-specific APIs**.</p>
+    <p>Ang **Education Edition** ng Minecraft sa China ay isang mahalagang bahagi ng pagtulak ng bansa para sa makabagong pag-aaral. Sa pakikipagtulungan sa Microsoft, ang edisyong ito ay nagbibigay ng mga curated lesson plan at immersive learning worlds. Ang mga programa tulad ng Minecraft: Education Edition Summer Camps ay nagpapahintulot sa mga mag-aaral na tuklasin ang scientific concepts, environmental challenges, at creative problem-solving.</p>
+  </section>
+
+  <section>
+    <h2>Pag-access sa Minecraft China sa 4399</h2>
+    <p>Upang sumisid sa Minecraft China Edition sa pamamagitan ng sikat na 4399 platform, kailangan mong gumawa ng isang **4399 account**. Libre ito at maaaring gawin nang ligtas sa opisyal na 4399 games portal. Hindi inirerekomenda ang indibidwal na pagbabahagi ng accounts para protektahan ang seguridad at privacy ng user.</p>
+    <p>Magrehistro o mag-login dito: <a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">Minecraft Download & Guide - Opisyal na Minecraft 4399 Portal</a></p>
+    <p>Nagbibigay ang portal na ito ng pinakabagong opisyal na downloads, komprehensibong strategy guides, listahan ng popular na server, at mga kaganapan sa komunidad. Ito ang pinakamahusay na entry point para sa mga bago at bumabalik na manlalaro sa PC.</p>
+  </section>
+
+  <section>
+    <h2>Mga Video ng Gameplay at Trailer</h2>
+    <p>Ang official trailer na pinamagatang <a href="https://v.4399pk.com/wdshijie/video_414116.htm" target="_blank" rel="noopener noreferrer">最强发型师伍六七来袭！开启全新冒险之旅！</a> ay available sa 4399 video platform.</p>
+
+    <ul class="video-list">
+        <li>
+            <a href="https://www.youtube.com/watch?v=nnToRbNfL2U" target="_blank" rel="noopener noreferrer">I Survived 100 Days In Minecraft China Edition</a>
+            <p>— Isang popular na '100 Days' challenge video na nagtatampok ng eksklusibong content ng China Edition tulad ng Misty Forest biome.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=HTU-O_R-Puc" target="_blank" rel="noopener noreferrer">I Beat Minecraft China Edition</a>
+            <p>— Isang buong playthrough na nagpapakita ng natatanging pag-unlad at mga hamon na kinakailangan upang kumpletuhin ang edisyong ito.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=C5axrQ9IQ5M" target="_blank" rel="noopener noreferrer">Minecraft China Official Trailer</a>
+            <p>— Ang opisyal na promotional video na nagpapakita ng pinaghalong Java at Bedrock features at localized content.</p>
+        </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Opisyal na Chinese Portal at Resources</h2>
+    <p>Ang opisyal na Chinese portal tulad ng <a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">我的世界官网 (Minecraft official site sa 4399)</a> ay nagbibigay ng downloads, guides, at detalyadong strategy articles. Kasama sa mga resource na ito ang exclusive content updates, server information, at tutorials.</p>
+  </section>
+</div>
+
+<div class="content lang-zh" style="display:none;">
+  <section>
+    <h2>我的世界中国版介绍</h2>
+    <p><span class="highlight">我的世界中国版</span> 是一款独特的本地化版本，由 Mojang Studios 与中国科技公司网易合作开发，融合了 Java 与基岩版的经典元素，专为中国大陆玩家定制。与国际版不同，中国版集成了本地化内容、**实名认证**等严格的监管要求以及审查协议，在我的世界宇宙中拥有独特的身份。</p>
+    <p>该版本仅限中国境内使用，需通过经验证的中国身份证件才能访问，限制了其在国外的可用性。其界面完全采用**简体中文**，包含修改后的社交及多人系统，支持**跨平台游戏**以及通过内置补丁系统获得独特中国主题服务器和模组支持。</p>
+  </section>
+
+  <section>
+    <h2>独有特色和游戏玩法</h2>
+    <p>我的世界中国版引入了**50多项**独有特色。其中包括备受欢迎的 <em>末日模式</em> 等自定义游戏模式，该模式包含混乱的迷雾森林新生物群落、专属Boss及其他版本中没有的独特装备套装。</p>
+    <p>玩家将体验创新的游戏元素，包括受**中国神话**启发的全新生物（如麒麟）、特殊武器和盔甲套装，以及直接嵌入启动器中的广泛模组支持。定期的社区活动和专用的游戏内市场——使用**绿宝石和钻石**作为货币而非 Minecoins——提供外观和游戏内容。市场还通过观看广告奖励和刮刮卡机制鼓励每日参与。</p>
+    <p>值得注意的是，该版本的基岩版针对移动玩家进行了**触控优化**，并通过集成聊天过滤器和内容审核来遵守监管标准。</p>
+  </section>
+
+  <section>
+    <h2>我的世界中国版开发者版和教育版</h2>
+    <p>除了玩家版之外，我的世界中国版还提供了一个**开发者版**，使创作者能够在经中国当局批准的框架内构建自定义内容。此版本提供先进的模组工具和对**中国特有API**的访问，支持模组制作者和服务器管理员的生态系统。</p>
+    <p>我的世界在中国的**教育版**是中国推动创新学习的重要组成部分。通过与微软和主要教育机构合作，该版本提供精选的课程计划和沉浸式学习世界。例如 **Minecraft: Education Edition 夏令营**等项目允许学生在我的世界的沙盒环境中探索科学概念、环境挑战和创造性解决问题。</p>
+  </section>
+
+  <section>
+    <h2>在 4399 上访问我的世界中国版</h2>
+    <p>要通过流行的 **4399** 平台进入我的世界中国版，玩家需要创建一个 **4399 账户**。创建账户是免费的，并且可以通过访问官方 4399 游戏门户安全地完成。不鼓励个人共享账户以保护用户安全和隐私。</p>
+    <p>您可以使用 4399 主页或我的世界中国版特定页面进行注册或登录：<a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">我的世界下载与指南 - 4399 官方我的世界门户</a></p>
+    <p>该门户提供最新的官方下载、全面的攻略指南、热门服务器列表和社区活动。它是新玩家和回流玩家在 PC 上开始我的世界中国版之旅的最佳入口。</p>
+  </section>
+
+  <section>
+    <h2>游戏玩法和预告片视频</h2>
+    <p>官方预告片 <a href="https://v.4399pk.com/wdshijie/video_414116.htm" target="_blank" rel="noopener noreferrer">最强发型师伍六七来袭！开启全新冒险之旅！</a> 可在 4399 的视频平台上观看。</p>
+
+    <ul class="video-list">
+        <li>
+            <a href="https://www.youtube.com/watch?v=nnToRbNfL2U" target="_blank" rel="noopener noreferrer">I Survived 100 Days In Minecraft China Edition</a>
+            <p>— 热门的“100天生存”挑战视频，展示了中国版独有的内容，例如迷雾森林生物群落。</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=HTU-O_R-Puc" target="_blank" rel="noopener noreferrer">I Beat Minecraft China Edition</a>
+            <p>— 完整的通关流程，演示了完成此版本所需的独特进度和挑战。</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=C5axrQ9IQ5M" target="_blank" rel="noopener noreferrer">Minecraft China Official Trailer</a>
+            <p>— 官方宣传片，展示了 Java 和基岩版功能的融合以及本地化内容。</p>
+        </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>官方中文门户和资源</h2>
+    <p>官方中文门户网站，例如 <a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">我的世界官网 (4399 上的我的世界官方网站)</a>，专门为我的世界中国版玩家提供下载、指南和详细的策略文章。这些资源包括独家内容更新、服务器信息和教程，帮助玩家最大限度地发挥他们在此版本中的游戏体验。</p>
+  </section>
+</div>
+
+<div class="content lang-es" style="display:none;">
+  <section>
+    <h2>Introducción a Minecraft: China Edition</h2>
+    <p><span class="highlight">Minecraft: China Edition</span> es una versión única y localizada del aclamado juego Minecraft. Desarrollada en asociación entre Mojang Studios y la compañía tecnológica china NetEase, esta edición combina los elementos clásicos de las versiones Java y Bedrock, adaptada específicamente para jugadores en China continental. A diferencia de las ediciones internacionales, Minecraft China integra contenido localizado, estricto cumplimiento normativo (como el registro con nombre real) y protocolos de censura.</p>
+    <p>Esta versión es exclusiva de China y requiere una identificación china verificada para acceder, lo que limita su disponibilidad fuera del país. Su interfaz está completamente en chino simplificado e incluye un sistema social y multijugador modificado, que permite el juego multiplataforma con servidores temáticos chinos únicos y soporte de mods a través de un sistema de parches incorporado.</p>
+  </section>
+
+  <section>
+    <h2>Características Exclusivas y Jugabilidad</h2>
+    <p>Minecraft: China Edition presenta más de 50 características exclusivas. Entre ellas se encuentran modos de juego personalizados como el popular <em>Modo Apocalipsis</em>, que incluye nuevos biomas como el caótico Bosque Brumoso, jefes personalizados y conjuntos de equipo únicos.</p>
+    <p>Los jugadores experimentan elementos de juego innovadores que incluyen nuevos mobs inspirados en la mitología china (como Kirins), armas y armaduras especiales, además de un amplio soporte de mods integrado directamente en el lanzador. Un mercado dedicado en el juego (con esmeraldas y diamantes como moneda) ofrece contenido estético y de jugabilidad.</p>
+  </section>
+
+  <section>
+    <h2>Portal Oficial Chino y Recursos</h2>
+    <p>Los portales chinos oficiales, como <a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">我的世界官网 (Sitio oficial de Minecraft en 4399)</a>, proporcionan descargas, guías y artículos de estrategia detallados específicamente para los jugadores de Minecraft China. Estos recursos incluyen actualizaciones exclusivas, información de servidores y tutoriales.</p>
+  </section>
+
+    <section>
+    <h2>Videos de Jugabilidad y Trailers</h2>
+    <p>El tráiler oficial titulado <a href="https://v.4399pk.com/wdshijie/video_414116.htm" target="_blank" rel="noopener noreferrer">最强发型师伍六七来袭！开启全新冒险之旅！</a> está disponible en la plataforma de videos de 4399.</p>
+
+    <ul class="video-list">
+        <li>
+            <a href="https://www.youtube.com/watch?v=nnToRbNfL2U" target="_blank" rel="noopener noreferrer">Sobreviví 100 Días en Minecraft China Edition</a>
+            <p>— Un popular video de desafío de '100 Días' que presenta contenido exclusivo de la Edición China como el bioma del Bosque Brumoso.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=HTU-O_R-Puc" target="_blank" rel="noopener noreferrer">Vencí Minecraft China Edition</a>
+            <p>— Una partida completa que demuestra la progresión y los desafíos únicos necesarios para completar esta edición.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=C5axrQ9IQ5M" target="_blank" rel="noopener noreferrer">Tráiler Oficial de Minecraft China</a>
+            <p>— El video promocional oficial que muestra la combinación de características de Java y Bedrock y el contenido localizado.</p>
+        </li>
+    </ul>
+  </section>
+</div>
+
+<div class="content lang-de" style="display:none;">
+  <section>
+    <h2>Einführung in Minecraft: China Edition</h2>
+    <p><span class="highlight">Minecraft: China Edition</span> ist eine einzigartige, lokalisierte Version des weltweit gefeierten Spiels Minecraft. In Zusammenarbeit zwischen den Mojang Studios und dem chinesischen Technologieunternehmen NetEase entwickelt, vereint diese Edition die klassischen Elemente der Java- und Bedrock-Versionen und ist speziell auf Spieler auf dem chinesischen Festland zugeschnitten. Im Gegensatz zu den internationalen Editionen integriert Minecraft China lokalisierte Inhalte, strenge behördliche Auflagen wie die Registrierung mit echtem Namen und Zensurprotokolle.</p>
+    <p>Diese Version ist exklusiv für China und erfordert zur Nutzung einen verifizierten chinesischen Ausweis. Die Oberfläche ist vollständig in vereinfachtem Chinesisch gehalten und umfasst ein modifiziertes soziales und Multiplayer-System, das plattformübergreifendes Spielen mit einzigartigen Servern im chinesischen Stil und Mod-Unterstützung über ein integriertes Patch-System ermöglicht.</p>
+  </section>
+
+  <section>
+    <h2>Exklusive Funktionen und Gameplay</h2>
+    <p>Minecraft: China Edition führt über 50 exklusive Funktionen ein. Dazu gehören benutzerdefinierte Spielmodi wie der beliebte <em>Apokalypse-Modus</em>, der neue Biome wie den chaotischen Nebelwald, benutzerdefinierte Bosse und einzigartige Ausrüstungssets enthält, die es nirgendwo sonst gibt.</p>
+    <p>Spieler erleben innovative Gameplay-Elemente, darunter new Mobs, die von der chinesischen Mythologie inspiriert sind (wie Kirins), spezielle Waffen und Rüstungssets sowie eine umfassende Mod-Unterstützung, die direkt in den Launcher integriert ist. Ein dedizierter In-Game-Marktplatz (mit Smaragden und Diamanten als Währung) bietet sowohl kosmetische als auch Gameplay-Inhalte.</p>
+  </section>
+
+  <section>
+    <h2>Offizielle Chinesische Portale und Ressourcen</h2>
+    <p>Die offiziellen chinesischen Portale wie <a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">我的世界官网 (Offizielle Minecraft-Seite auf 4399)</a> bieten Downloads, Anleitungen und detaillierte Strategieartikel speziell für Minecraft China-Spieler. Diese Ressourcen umfassen exklusive Inhaltsaktualisierungen, Serverinformationen und Tutorials.</p>
+  </section>
+
+    <section>
+    <h2>Videos zu Gameplay und Trailern</h2>
+    <p>Der offizielle Trailer mit dem Titel <a href="https://v.4399pk.com/wdshijie/video_414116.htm" target="_blank" rel="noopener noreferrer">最强发型师伍六七来袭！开启全新冒险之旅！</a> ist auf der 4399-Videoplattform verfügbar.</p>
+
+    <ul class="video-list">
+        <li>
+            <a href="https://www.youtube.com/watch?v=nnToRbNfL2U" target="_blank" rel="noopener noreferrer">Ich habe 100 Tage in Minecraft China Edition überlebt</a>
+            <p>— Ein beliebtes '100 Tage'-Herausforderungsvideo mit exklusiven Inhalten der China Edition wie dem Nebelwald-Biom.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=HTU-O_R-Puc" target="_blank" rel="noopener noreferrer">Ich habe Minecraft China Edition durchgespielt</a>
+            <p>— Ein kompletter Durchgang, der den einzigartigen Fortschritt und die Herausforderungen demonstriert, die zum Abschluss dieser Edition erforderlich sind.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=C5axrQ9IQ5M" target="_blank" rel="noopener noreferrer">Offizieller Minecraft China Trailer</a>
+            <p>— Das offizielle Werbevideo, das die Mischung aus Java- und Bedrock-Funktionen sowie lokalisierte Inhalte zeigt.</p>
+        </li>
+    </ul>
+  </section>
+</div>
+
+<div class="content lang-ru" style="display:none;">
+  <section>
+    <h2>Введение в Minecraft: China Edition</h2>
+    <p><span class="highlight">Minecraft: China Edition</span> — это уникальная локализованная версия всемирно известной игры Minecraft. Эта версия, разработанная в партнерстве между Mojang Studios и китайской технологической компанией NetEase, сочетает в себе классические элементы версий Java и Bedrock, адаптированные специально для игроков в материковом Китае. В отличие от международных изданий, Minecraft China включает локализованный контент, строгое соблюдение нормативных требований (например, регистрацию под настоящим именем) и протоколы цензуры.</p>
+    <p>Эта версия является эксклюзивной для Китая и требует для доступа подтвержденное удостоверение личности гражданина Китая, что ограничивает ее доступность за пределами страны. Ее интерфейс полностью на упрощенном китайском языке и включает модифицированную социальную и многопользовательскую систему, позволяющую осуществлять кроссплатформенную игру с уникальными серверами на китайскую тематику и поддержкой модов через встроенную систему патчей.</p>
+  </section>
+
+  <section>
+    <h2>Эксклюзивные Возможности и Геймплей</h2>
+    <p>Minecraft: China Edition представляет более 50 эксклюзивных функций. Среди них пользовательские игровые режимы, такие как популярный <em>Режим Апокалипсиса</em>, который включает новые биомы (например, хаотический Туманный Лес), пользовательских боссов и уникальные наборы снаряжения, которых нет больше нигде.</p>
+    <p>Игроки знакомятся с инновационными элементами геймплея, включая новых мобов, вдохновленных китайской мифологией (таких как Кирины), специальное оружие и наборы брони, а также обширную поддержку модов, встроенную непосредственно в лаунчер. Специализированный внутриигровой рынок (с изумрудами и алмазами в качестве валюты) предлагает как косметический, так и игровой контент.</p>
+  </section>
+
+  <section>
+    <h2>Официальные китайские порталы и ресурсы</h2>
+    <p>Официальные китайские порталы, такие как <a href="https://news.4399.com/wdshijie/#search3-9e5f" target="_blank" rel="noopener noreferrer">我的世界官网 (Официальный сайт Minecraft на 4399)</a>, предоставляют загрузки, руководства и подробные стратегические статьи специально для игроков Minecraft China. Эти ресурсы включают эксклюзивные обновления контента, информацию о серверах и учебные пособия.</p>
+  </section>
+
+  <section>
+    <h2>Видео игрового процесса и трейлеры</h2>
+    <p>Официальный трейлер под названием <a href="https://v.4399pk.com/wdshijie/video_414116.htm" target="_blank" rel="noopener noreferrer">最强发型师伍六七来袭！开启全新冒险之旅！</a> доступен на видеоплатформе 4399.</p>
+
+    <ul class="video-list">
+        <li>
+            <a href="https://www.youtube.com/watch?v=nnToRbNfL2U" target="_blank" rel="noopener noreferrer">Я выжил 100 дней в Minecraft China Edition</a>
+            <p>— Популярное видео-испытание '100 дней' с эксклюзивным контентом China Edition, таким как биом Туманного Леса.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=HTU-O_R-Puc" target="_blank" rel="noopener noreferrer">Я прошел Minecraft China Edition</a>
+            <p>— Полное прохождение, демонстрирующее уникальный прогресс и испытания, необходимые для завершения этой версии.</p>
+        </li>
+        <li>
+            <a href="https://www.youtube.com/watch?v=C5axrQ9IQ5M" target="_blank" rel="noopener noreferrer">Официальный трейлер Minecraft China</a>
+            <p>— Официальное рекламное видео, демонстрирующее сочетание функций Java и Bedrock и локализованный контент.</p>
+        </li>
+    </ul>
+  </section>
+</div>
+
+
+<a href="index.html" class="back-button-link">← Back to Home</a>
+
+</div> <div id="style-modal" class="modal-overlay">
+  <div class="modal-content">
+    <button id="close-style-modal" class="close-modal-btn" aria-label="Close style chooser">&times;</button>
+    <h3 data-lang-key="modalTitle">Choose a Background Style</h3>
+    
+    <div id="gradient-grid-container" class="gradient-grid">
+      </div>
+
+    <div class="custom-gradient-creator">
+      <h4 data-lang-key="customGradientTitle">Create Your Own</h4>
+      
+      <div id="custom-gradient-preview" class="gradient-swatch"></div>
+      
+      <div id="custom-color-inputs">
+        </div>
+      
+      <div id="custom-creator-buttons">
+        <button id="add-color-btn" class="modal-btn" data-lang-key="addColor">+</button>
+        <button id="apply-custom-btn" class="modal-btn" data-lang-key="applyCustom">Apply</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<footer>
+  <p>&copy; 2025 Minecraft Overview. All rights reserved.</p>
+  <p>Minecraft is a trademark of Mojang Studios. This is an unofficial informational website.</p>
+</footer>
+
+
+<script>
+// --- TRANSLATIONS OBJECT ---
+const translations = {
+    'en': {
+        'changeStyle': '🎨 Change Style',
+        'toggleTheme': 'Toggle Theme',
+        'modalTitle': 'Choose a Background Style',
+        'defaultSwatch': 'Default',
+        'customGradientTitle': 'Create Your Own',
+        'addColor': '+ Add Color',
+        'applyCustom': 'Apply'
+    },
+    'fil': {
+        'changeStyle': '🎨 Palitan ang Estilo',
+        'toggleTheme': 'Baguhin ang Tema',
+        'modalTitle': 'Pumili ng Estilo ng Background',
+        'defaultSwatch': 'Default',
+        'customGradientTitle': 'Gumawa ng Sarili Mo',
+        'addColor': '+ Magdagdag ng Kulay',
+        'applyCustom': 'Ilapat'
+    },
+    'zh': {
+        'changeStyle': '🎨 更改样式',
+        'toggleTheme': '切换主题',
+        'modalTitle': '选择背景样式',
+        'defaultSwatch': '默认',
+        'customGradientTitle': '创建您自己的',
+        'addColor': '+ 添加颜色',
+        'applyCustom': '应用'
+    },
+    'es': {
+        'changeStyle': '🎨 Cambiar Estilo',
+        'toggleTheme': 'Cambiar Tema',
+        'modalTitle': 'Elige un Estilo de Fondo',
+        'defaultSwatch': 'Defecto',
+        'customGradientTitle': 'Crea tu Propio',
+        'addColor': '+ Añadir Color',
+        'applyCustom': 'Aplicar'
+    },
+    'de': {
+        'changeStyle': '🎨 Stil Ändern',
+        'toggleTheme': 'Theme Umschalten',
+        'modalTitle': 'Wähle einen Hintergrundstil',
+        'defaultSwatch': 'Standard',
+        'customGradientTitle': 'Erstelle Deinen Eigenen',
+        'addColor': '+ Farbe Hinzufügen',
+        'applyCustom': 'Anwenden'
+    },
+    'ru': {
+        'changeStyle': '🎨 Сменить Стиль',
+        'toggleTheme': 'Сменить Тему',
+        'modalTitle': 'Выберите Стиль Фона',
+        'defaultSwatch': 'По Умолчанию',
+        'customGradientTitle': 'Создать Свой',
+        'addColor': '+ Добавить Цвет',
+        'applyCustom': 'Применить'
+    }
+};
+
+/**
+ * Updates all text on the page based on data-lang-key attributes
+ */
+function updateAllTranslatedText(lang) {
+    if (!translations[lang]) lang = 'en'; // Fallback to English
+
+    const elementsToTranslate = document.querySelectorAll('[data-lang-key]');
+    
+    elementsToTranslate.forEach(element => {
+        const key = element.getAttribute('data-lang-key');
+        if (translations[lang][key]) {
+            if (key === 'defaultSwatch') {
+                const label = element.querySelector('.swatch-label');
+                if (label) label.textContent = translations[lang][key];
+            } else {
+                element.textContent = translations[lang][key];
+            }
+        }
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // 1. Setup Language Switcher
+    setupLanguageSwitcher();
+
+    // 2. Setup Style (Gradient) Chooser
+    setupStyleChooser();
+
+    // 3. Setup Theme Toggler
+    setupThemeToggler();
+
+    // 4. Apply initial translations (default 'en')
+    updateAllTranslatedText('en');
+});
+
+
+/**
+ * Function to initialize the language switcher functionality
+ */
+function setupLanguageSwitcher() {
+    const langButtons = document.querySelectorAll('.lang-btn[data-lang]');
+    const contentDivs = document.querySelectorAll('.content[class*="lang-"]');
+    let currentLang = 'en'; // Keep track of current language
+
+    langButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const selectedLang = button.getAttribute('data-lang');
+            currentLang = selectedLang; // Update current language
+
+            langButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+            button.classList.add('active');
+            button.setAttribute('aria-pressed', 'true');
+
+            contentDivs.forEach(div => {
+                if (div.classList.contains(`lang-${selectedLang}`)) {
+                    div.style.display = 'block';
+                } else {
+                    div.style.display = 'none';
+                }
+            });
+
+            updateAllTranslatedText(selectedLang);
+        });
+    });
+
+    // Function to be called by other scripts to get the current language
+    window.getCurrentLanguage = () => currentLang;
+}
+
+/**
+ * Function to initialize the theme toggler
+ */
+function setupThemeToggler() {
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const themeKey = 'pageTheme';
+
+    // On Page Load: Check for saved theme
+    const savedTheme = localStorage.getItem(themeKey);
+    if (savedTheme === 'theme-classic') {
+        document.body.classList.add('theme-classic');
+    }
+
+    // On Button Click: Toggle theme and save preference
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('theme-classic');
+        
+        if (document.body.classList.contains('theme-classic')) {
+            localStorage.setItem(themeKey, 'theme-classic');
+        } else {
+            localStorage.removeItem(themeKey);
+        }
+    });
+}
+
+
+/**
+ * Function to initialize the style chooser modal and functionality
+ */
+function setupStyleChooser() {
+    // --- 1. DEFINE GRADIENTS (Now horizontal) ---
+    const gradients = [
+        'linear-gradient(90deg, #0f2027, #203a43, #2c5364)',
+        'linear-gradient(90deg, #232526, #414345)',
+        'linear-gradient(90deg, #3a6186, #89253e)',
+        'linear-gradient(90deg, #141E30, #243B55)',
+        'linear-gradient(90deg, #16222A, #3A6073)',
+        'linear-gradient(90deg, #000000, #434343)',
+        'linear-gradient(90deg, #373B44, #4286f4)',
+        'linear-gradient(90deg, #283048, #859398)',
+        'linear-gradient(90deg, #485563, #29323c)',
+        'linear-gradient(90deg, #2c3e50, #fd746c)',
+        'linear-gradient(90deg, #061161, #780206)',
+        'linear-gradient(90deg, #1FA2FF, #12D8FA, #A6FFCB)',
+        'linear-gradient(90deg, #314755, #26a0da)',
+        'linear-gradient(90deg, #093028, #237A57)',
+        'linear-gradient(90deg, #333333, #dd1818)',
+        'linear-gradient(90deg, #1A1A1A, #62118f)',
+        'linear-gradient(90deg, #3f2b96, #a8c0ff)',
+        'linear-gradient(90deg, #4b6cb7, #182848)',
+        'linear-gradient(90deg, #1D2B64, #F8CDDA)',
+        'linear-gradient(90deg, #0052D4, #4364F7, #6FB1FC)',
+        'linear-gradient(90deg, #0f0c29, #302b63, #24243e)',
+        'linear-gradient(90deg, #44A08D, #093637)',
+        'linear-gradient(90deg, #3E5151, #DECBA4)',
+        'linear-gradient(90deg, #11998e, #38ef7d)',
+        'linear-gradient(90deg, #108dc7, #ef8e38)',
+        'linear-gradient(90deg, #EB3349, #F45C43)',
+        'linear-gradient(90deg, #FF8008, #FFC837)',
+        'linear-gradient(90deg, #4A00E0, #8E2DE2)',
+        'linear-gradient(90deg, #00c6ff, #0072ff)',
+        'linear-gradient(90deg, #f7971e, #ffd200)',
+        'linear-gradient(90deg, #606c88, #3f4c6b)',
+        'linear-gradient(90deg, #20002c, #cbb4d4)',
+        'linear-gradient(90deg, #1e130c, #9a8478)',
+        'linear-gradient(90deg, #2b5876, #4e4376)',
+        'linear-gradient(90deg, #141517, #3b3f44)',
+        'linear-gradient(90deg, #c31432, #240b36)',
+        'linear-gradient(90deg, #3a1c71, #d76d77, #ffaf7b)',
+        'linear-gradient(90deg, #355C7D, #6C5B7B, #C06C84)'
+    ];
+    
+    const defaultBg = 'var(--color-dark-bg)';
+    const storageKey = 'pageBackgroundStyle';
+
+    // --- 2. GET MODAL ELEMENTS ---
+    const openModalBtn = document.getElementById('open-style-chooser');
+    const closeModalBtn = document.getElementById('close-style-modal');
+    const modal = document.getElementById('style-modal');
+    const grid = document.getElementById('gradient-grid-container');
+
+    // --- 3. MODAL OPEN/CLOSE LOGIC ---
+    const openModal = () => modal.classList.add('visible');
+    const closeModal = () => modal.classList.remove('visible');
+
+    openModalBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // --- 4. STYLE APPLICATION LOGIC ---
+    const applyStyle = (style) => {
+        // Only apply if not in classic theme, or if it's the default
+        if (!document.body.classList.contains('theme-classic') || style === defaultBg) {
+             document.body.style.background = style;
+        }
+        // Always save the preference
+        try {
+            localStorage.setItem(storageKey, style);
+        } catch (e) {
+            console.error('LocalStorage is not available.', e);
+        }
+    };
+    
+    // --- 5. POPULATE PRESET GRID ---
+    const defaultSwatch = document.createElement('div');
+    defaultSwatch.className = 'gradient-swatch default-swatch';
+    defaultSwatch.style.background = defaultBg;
+    defaultSwatch.setAttribute('data-lang-key', 'defaultSwatch'); 
+    defaultSwatch.innerHTML = `<span class="swatch-label">Default</span>`; 
+    defaultSwatch.setAttribute('aria-label', 'Set default background');
+    defaultSwatch.addEventListener('click', () => {
+        applyStyle(defaultBg);
+        closeModal();
+    });
+    grid.appendChild(defaultSwatch);
+
+    gradients.forEach((grad, index) => {
+        const swatch = document.createElement('div');
+        swatch.className = 'gradient-swatch';
+        swatch.style.background = grad;
+        swatch.setAttribute('aria-label', `Set gradient style ${index + 1}`);
+        swatch.addEventListener('click', () => {
+            applyStyle(grad);
+            closeModal();
+        });
+        grid.appendChild(swatch);
+    });
+    
+    // --- 6. ON PAGE LOAD: Check for saved style ---
+    try {
+        const savedStyle = localStorage.getItem(storageKey);
+        if (savedStyle && !document.body.classList.contains('theme-classic')) {
+            document.body.style.background = savedStyle;
+        } else if (!savedStyle) {
+            // Set default if nothing is saved
+            document.body.style.background = defaultBg;
+        }
+    } catch (e) {
+         console.error('LocalStorage is not available.', e);
+    }
+
+    // --- 7. CUSTOM GRADIENT CREATOR LOGIC ---
+    let customColors = ['#4A00E0', '#8E2DE2']; // Initial 2 colors
+    const maxColors = 4;
+    const minColors = 2;
+
+    const previewBox = document.getElementById('custom-gradient-preview');
+    const inputsContainer = document.getElementById('custom-color-inputs');
+    const addBtn = document.getElementById('add-color-btn');
+    const applyBtn = document.getElementById('apply-custom-btn');
+
+    const updateCustomPreview = () => {
+        const gradientString = `linear-gradient(90deg, ${customColors.join(', ')})`;
+        previewBox.style.background = gradientString;
+    };
+
+    const updateButtons = () => {
+        addBtn.disabled = customColors.length >= maxColors;
+        document.querySelectorAll('.remove-color-btn').forEach(btn => {
+            btn.disabled = customColors.length <= minColors;
+        });
+    };
+
+    const renderColorInputs = () => {
+        inputsContainer.innerHTML = ''; 
+        
+        customColors.forEach((color, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'color-input-wrapper';
+
+            const colorInput = document.createElement('input');
+            colorInput.type = 'color';
+            colorInput.value = color;
+            colorInput.setAttribute('aria-label', `Color ${index + 1}`);
+
+            colorInput.addEventListener('input', (e) => {
+                customColors[index] = e.target.value;
+                updateCustomPreview();
+            });
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-color-btn';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.setAttribute('aria-label', `Remove color ${index + 1}`);
+            
+            removeBtn.addEventListener('click', () => {
+                if (customColors.length > minColors) {
+                    customColors.splice(index, 1);
+                    renderColorInputs(); 
+                    updateCustomPreview();
+                }
+            });
+
+            wrapper.appendChild(colorInput);
+            wrapper.appendChild(removeBtn);
+            inputsContainer.appendChild(wrapper);
+        });
+
+        updateButtons(); 
+    };
+
+    addBtn.addEventListener('click', () => {
+        if (customColors.length < maxColors) {
+            customColors.push('#ffffff'); 
+            renderColorInputs();
+            updateCustomPreview();
+        }
+    });
+
+    applyBtn.addEventListener('click', () => {
+        const customGradient = `linear-gradient(90deg, ${customColors.join(', ')})`;
+        applyStyle(customGradient);
+        closeModal();
+    });
+
+    renderColorInputs();
+    updateCustomPreview();
+}
+
+</script>
+
+</body>
+</html>
