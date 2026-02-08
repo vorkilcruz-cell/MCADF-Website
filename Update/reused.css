@@ -1,0 +1,138 @@
+/* CRITICAL FIX: Ensure the html element also spans the full screen */
+html {
+    /* Use 100% height for the root container */
+    height: 100%;
+    width: 100%;
+}
+
+/* CSS for the gradient background */
+body {
+    /* Fix: Setting margin: 0 on html and body is often required */
+    margin: 0;
+    
+    /* FIX: Setting height to 100vh ensures it fills the viewport vertically */
+    height: 100vh; 
+    /* FIX: Setting width to 100% ensures it respects the full width of the HTML element */
+    width: 100%;
+    
+    /* LAYOUT FIX: Removed flex properties to use standard document flow
+       This ensures the content box starts at the top of the viewport instead of the center. */
+    /* REMOVED: display: flex; */
+    /* REMOVED: align-items: center; */ 
+
+    /* Typography styling */
+    font-family: 'JetBrains Mono', monospace;
+    /* UPDATED: Changed from white to a deep violet for contrast */
+    color: #30004C; 
+    /* REMOVED: Text shadow is not needed for dark text on a light background */
+
+    /* Gradient is set to go "to right" (horizontal) */
+    background: linear-gradient(to right, #4facfe 0%, #00f2fe 30%, #ea60da 70%, #fec5e4 100%);
+    
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.content-box {
+    /* FIX: Make the content block span horizontally */
+    width: 90%; 
+    max-width: 1200px; /* Limits size on huge screens */
+    /* LAYOUT FIX: Using margin to center horizontally and push down from the top edge */
+    margin: 50px auto 0 auto; 
+    
+    /* A styled box to make the text stand out against the gradient */
+    background-color: rgba(0, 0, 0, 0.2); 
+    padding: 40px 60px;
+    border-radius: 12px;
+    /* Keep text-align: center here for compatibility with other elements */
+    text-align: center;
+    /* Frosted glass effect for a modern touch */
+    backdrop-filter: blur(5px); 
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* NEW: Ensure all headings are center-aligned, even outside the .content-box */
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    font-size: 1.1rem;
+}
+
+/* NEW: Styles for the deprecated but requested <marquee> tag */
+marquee {
+    /* Inherit the text color and font from the body for visibility */
+    color: inherit;
+    /* REMOVED: Text shadow is not needed for dark text on a light background */
+    font-family: inherit;
+    /* Ensure it fills its container width */
+    display: block;
+    width: 100%;
+    /* Add some visual separation */
+    padding: 15px 0; 
+    font-size: 1.25rem;
+}
+
+/* NEW: Shared styles for buttons and input fields */
+button,
+input[type="submit"],
+input[type="button"] {
+    /* Basic Button Styling */
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent white */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Semi-transparent border */
+    padding: 12px 24px;
+    margin: 10px;
+    border-radius: 8px;
+    font-family: inherit; /* Inherit the JetBrains Mono font */
+    /* UPDATED: Button text color changed to match the body text */
+    color: #30004C; 
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: background-color 0.3s, transform 0.1s;
+    font-size: 1rem;
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05); /* Subtle scale effect on hover */
+}
+.vertical-scroll-container {
+    /* 1. Enable Horizontal Layout and Scrolling */
+    display: flex;         /* Allows items to sit side-by-side */
+    overflow-x: auto;      /* Enables horizontal scrolling when content overflows */
+    overflow-y: hidden;    /* Hides vertical scrollbar, keeping height fixed */
+    white-space: nowrap;   /* Crucial: Prevents the button links from wrapping to the next line */
+    
+    /* 2. Optional Styling for visual clarity */
+    padding: 10px 0;       /* Adds a little space above and below the buttons */
+    /* If you need a fixed width, add it here, e.g., width: 300px; */
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* 3. Style the Link Wrappers */
+.vertical-scroll-container a {
+    /* Ensures the links don't stretch and act as inline blocks */
+    display: inline-block;
+    margin-right: 10px;    /* Adds space between the buttons */
+    /* Remove text-decoration if you didn't previously (it doesn't hurt here) */
+    text-decoration: none;
+}
+
+/* 4. Style the Buttons */
+.vertical-scroll-container button {
+    /* Key: Allows the button to shrink-wrap its text content */
+    width: auto;           /* Overrides any default full-width behavior */
+    /* Padding helps the button look nice and fit the text better */
+    padding: 8px 15px; 
+    /* Ensures the height is uniform based on the padding/content */
+    height: auto; 
+}
