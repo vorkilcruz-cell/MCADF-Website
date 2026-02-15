@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORLD000 ANOMALY DETECTED</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=VT323&display=swap');
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #000428, #004e92, #000428);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite, glitch 0.1s infinite;
+            font-family: 'VT323', monospace;
+            color: #00ff41;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        @keyframes scanline {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #00ff41;
+            animation: scanline 2s linear infinite;
+            z-index: 1000;
+        }
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41;
+            animation: flicker 3s infinite;
+        }
+        .corruption {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            font-size: 200px;
+            color: #ff0040;
+            animation: glitch 0.3s infinite;
+            z-index: -1;
+        }
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .video-container {
+            position: relative;
+            margin: 40px 0;
+        }
+        .video-container iframe {
+            width: 100%;
+            max-width: 800px;
+            height: 450px;
+            border: 3px solid #00ff41;
+            box-shadow: 0 0 30px #00ff41;
+            animation: flicker 4s infinite;
+        }
+        .cta {
+            display: inline-block;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            font-family: 'Orbitron', sans-serif;
+            background: transparent;
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            text-decoration: none;
+            margin: 20px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            transition: all 0.3s;
+            animation: flicker 2s infinite;
+        }
+        .cta:hover {
+            background: #00ff41;
+            color: #000;
+            box-shadow: 0 0 20px #00ff41;
+            transform: scale(1.05);
+        }
+        .info {
+            background: rgba(0, 68, 146, 0.8);
+            padding: 30px;
+            margin: 40px 0;
+            border: 1px solid #00ff41;
+            box-shadow: 0 0 20px #00ff41;
+            text-align: left;
+            font-size: 1.2em;
+            line-height: 1.6;
+            animation: glitch 0.5s infinite;
+        }
+        .info h2 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        .terminal {
+            background: #000;
+            color: #00ff41;
+            padding: 20px;
+            font-family: 'VT323', monospace;
+            font-size: 1.1em;
+            border: 1px solid #00ff41;
+            margin: 20px 0;
+            overflow: auto;
+            height: 300px;
+            animation: scanline 1s linear infinite;
+        }
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: -1;
+        }
+        @media (max-width: 768px) {
+            .header { font-size: 2em; letter-spacing: 5px; }
+            .video-container iframe { height: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="corruption">CORRUPTED DATA</div>
+    <canvas class="noise" id="noise"></canvas>
+
+    <div class="header">WORLD000 ANOMALY</div>
+
+    <div class="content">
+        <p style="font-size: 1.5em; margin-bottom: 40px;">A genuine file system anomaly detected. Not a mod. Reality fracturing. Join the investigation before it's too late.[web:9]</p>
+
+        <div class="video-container">
+            <iframe width="1017" height="572" src="https://www.youtube.com/embed/PnDxGOrheeI" title="effc4f40 36d7 430c 285c 6679b8487870 custom" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+
+        <a href="https://www.youtube.com/@world000discovery" class="cta" target="_blank">SUBSCRIBE @world000discovery</a>
+        <a href="https://discord.gg/vuXMGhahXk" class="cta" target="_blank">JOIN DISCORD SERVER</a>
+
+        <div class="info">
+            <h2>ANOMALY LOG</h2>
+            <div class="terminal">
+[BOOT SEQUENCE INITIATED]<br>
+[DETECTING WORLD000 FILES... ANOMALY CONFIRMED]<br>
+[BEGINNING TRANSMISSION... CO-FOUNDER DOCTOR "V" CONNECTED]<br>
+World000 is no modpack. It's a documented filesystem anomaly emerging in Minecraft worlds.[web:9]<br>
+Real corruption spreading across servers.<br>
+Old Discords deleted. New central hub: https://discord.gg/vuXMGhahXk<br>
+Key evidence in video: Chunks corrupting, impossible modified nbt structures, timeline glitches.[web:1]<br>
+Player reports: Blocks phasing, entities with no spawn code, coordinates leading to voids.<br>
+[WARNING: EXPOSURE MAY CORRUPT LOCAL FILES]<br>
+Join @world000discovery for updates. Investigate. Decode. Survive.<br>
+Spiritual Involvement. EXORIAL IS NOT GOD.<br>
+We Need you to help us and investigate.<br>
+[SYSTEM OVERRIDE... JOIN NOW]
+            </div>
+        </div>
+
+        <p style="font-size: 1.2em;">New intel dropping daily at 000discovery. Both old servers purged - this is the replacement. Don't miss the next transmission.</p>
+    </div>
+
+    <script>
+        // Retro-futuristic noise effect
+        const canvas = document.getElementById('noise');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        function generateNoise() {
+            ctx.fillStyle = 'rgba(0, 255, 65, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < 100; i++) {
+                ctx.fillStyle = `rgba(255, 0, 64, ${Math.random() * 0.3})`;
+                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
+            }
+        }
+
+        setInterval(generateNoise, 50);
+
+        // Corruption glitch on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const corruption = document.querySelector('.corruption');
+            corruption.style.left = e.clientX + 'px';
+            corruption.style.top = e.clientY + 'px';
+            corruption.style.opacity = Math.random() * 0.2 + 0.05;
+        });
+
+        // Retro click sound simulation (beep)
+        document.querySelectorAll('.cta').forEach(cta => {
+            cta.addEventListener('click', () => {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.frequency.value = 800;
+                oscillator.type = 'square';
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            });
+        });
+    </script>
+</body>
+</html>
