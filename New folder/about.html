@@ -1,0 +1,199 @@
+<Html>
+    <head>
+        <title>
+            About
+        </title>
+    </head>
+    <style>
+        
+/* Style the body */
+body {
+  font-family: Arial;
+  margin: 0;
+}
+
+/* Header/Logo Title */
+.header {
+  padding: 60px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 30px;
+}
+
+/* Page Content */
+.content {padding:20px;}
+
+.all-browsers {
+  margin: 0;
+  padding: 5px;
+  background-color: lightgray;
+}
+
+.all-browsers > h1, .browser {
+  margin: 10px;
+  padding: 5px;
+}
+
+.browser {
+  background: white;
+}
+
+.browser > h2, p {
+  margin: 4px;
+  font-size: 90%;
+}
+
+footer {
+  text-align: center;
+  padding: 3px;
+  background-color: rgb(26, 223, 151);
+  color: rgb(0, 0, 0);
+}
+
+.myButton {
+	box-shadow: 0px 0px 0px 0px #3dc21b;
+	background:linear-gradient(to bottom, #44c767 5%, #5cbf2a 100%);
+	background-color:#44c767;
+	border-radius:28px;
+	border:1px solid #18ab29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #5cbf2a 5%, #44c767 100%);
+	background-color:#5cbf2a;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+    </style>
+    <body style="background-color: aquamarine;">
+
+        <div class="header">
+            
+<button class="myButton" onclick="history.back()">Go Back</button>
+    <h1>About Me</h1>
+</div>
+
+<table>
+  <tr>
+    <th>Classification</th>
+    <th>Skill Rating</th>
+    <th>Type</th>
+    <th>Achievements</th>
+  </tr>
+  <tr>
+    <td>Technology</td>
+    <td>9.5/10</td>
+    <td>Coding/Programming/Hardware</td>
+    <td>3 Year hardware awardee, 100+ Visits on self-made roblox experiences.</td>
+  </tr>
+  <tr>
+    <td>Sports</td>
+    <td>7.5/10</td>
+    <td>Badminton</td>
+    <td>~80 Grade in P.E. Badminton</td>
+  </tr>
+  <tr>
+    <td>Baking</td>
+    <td>8.9/10</td>
+    <td>Making Chocolate Chip cookies</td>
+    <td>Gave multiple chocolate chip cookies to all faculty and batchmates</td>
+  </tr>
+</table>
+<br>
+<h1>Submit Contact Info</h1>
+<form id="discordForm">
+    <label for="fname">First name:</label>
+    <input type="text" id="fname" name="fname" value="John" required>
+ 
+    <label for="lname">Last name:</label>
+    <input type="text" id="lname" name="lname" value="Doe" required>
+ 
+    <button type="submit" id="submitBtn">Submit</button>
+    <div id="status"></div>
+</form>
+ 
+<script>
+// Insert your Discord webhook URL here
+const webhookUrl = 'https://canary.discord.com/api/webhooks/1527521627129122816/Ck568NCAOTj7qezAYdTTvTu_udLGKjcZx8LowGrQF7rQ4qOg3bUaHyGu7OiCu-pYS4J2';
+ 
+const form = document.getElementById('discordForm');
+const submitBtn = document.getElementById('submitBtn');
+const statusEl = document.getElementById('status');
+ 
+function setStatus(message, type) {
+    statusEl.textContent = message;
+    statusEl.className = type || '';
+}
+ 
+async function sendToDiscord(payload) {
+    return fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+}
+ 
+form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+ 
+    if (webhookUrl.includes('YOUR_WEBHOOK_ID')) {
+        setStatus('Set your webhook URL in the script before submitting.', 'error');
+        return;
+    }
+ 
+    const firstName = document.getElementById('fname').value.trim();
+    const lastName = document.getElementById('lname').value.trim();
+ 
+    if (!firstName || !lastName) {
+        setStatus('Please fill in both fields.', 'error');
+        return;
+    }
+ 
+    const messagePayload = {
+        content: `**New Form Submission**\nFirst Name: ${firstName}\nLast Name: ${lastName}`
+    };
+ 
+    submitBtn.disabled = true;
+    setStatus('Sending...', 'pending');
+ 
+    try {
+        const response = await sendToDiscord(messagePayload);
+ 
+        if (response.status === 429) {
+            const data = await response.json().catch(() => ({}));
+            const retryAfter = data.retry_after ? `${data.retry_after}s` : 'a moment';
+            setStatus(`Rate limited by Discord. Try again in ${retryAfter}.`, 'error');
+        } else if (response.ok) {
+            setStatus('Submitted successfully!', 'success');
+            form.reset();
+        } else {
+            setStatus(`Failed to send (status ${response.status}).`, 'error');
+        }
+    } catch (err) {
+        console.error('Network error:', err);
+        setStatus('Network error — could not reach Discord.', 'error');
+    } finally {
+        submitBtn.disabled = false;
+    }
+});
+</script>
+<h6>https://discord.gg/QXsaChmHpk</h6>
+
+<footer>
+    <br>
+  <p>Owner: Nathaniel Cruz</p>
+  <p><a href="mailto:voxxy@atomicmail.io">voxxy@atomicmail.io</a></p>
+</footer>
+    </body>
+</Html>
