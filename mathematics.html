@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mathematics 10 Formative Assessment – Triangle Trigonometry</title>
+<style>
+  :root{
+    --ink:#172033;
+    --muted:#667085;
+    --line:#d7dce5;
+    --panel:#ffffff;
+    --bg:#f5f7fb;
+    --accent:#2457a6;
+    --accent-soft:#eef4ff;
+    --warn:#8a4b08;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.45;
+  }
+  .toolbar{
+    position:sticky; top:0; z-index:10;
+    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    padding:10px 16px;
+    background:rgba(255,255,255,.96);
+    border-bottom:1px solid var(--line);
+    box-shadow:0 2px 10px rgba(20,30,50,.06);
+  }
+  .toolbar button{
+    border:1px solid #b8c4d8;
+    background:#fff;
+    color:var(--ink);
+    border-radius:8px;
+    padding:8px 12px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .toolbar button.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .progress-wrap{margin-left:auto; min-width:220px}
+  .progress-label{font-size:12px; color:var(--muted); margin-bottom:4px; text-align:right}
+  .progress{height:8px; border-radius:999px; background:#e7ebf2; overflow:hidden}
+  .progress > div{height:100%; width:0; background:var(--accent); transition:width .2s}
+  main{
+    width:min(980px, calc(100% - 28px));
+    margin:22px auto 60px;
+  }
+  .sheet{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    box-shadow:0 8px 28px rgba(23,32,51,.08);
+    overflow:hidden;
+  }
+  header{
+    text-align:center;
+    padding:28px 28px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  header h1{font-size:25px; margin:0 0 3px; letter-spacing:.3px}
+  header h2{font-size:15px; margin:0; font-weight:700; color:#344054}
+  .student-info{
+    display:grid;
+    grid-template-columns:1.4fr 1fr .8fr;
+    gap:16px;
+    padding:18px 28px 8px;
+  }
+  .field label{display:block; font-size:12px; color:var(--muted); margin-bottom:5px; font-weight:700}
+  input[type=text], input[type=date], textarea{
+    width:100%;
+    border:1px solid #bac3d1;
+    border-radius:8px;
+    padding:9px 10px;
+    font:inherit;
+    color:var(--ink);
+    background:#fff;
+  }
+  input:focus, textarea:focus{outline:2px solid #bcd2ff; border-color:var(--accent)}
+  .directions{
+    margin:10px 28px 20px;
+    padding:12px 14px;
+    background:var(--accent-soft);
+    border-left:4px solid var(--accent);
+    border-radius:8px;
+    font-size:14px;
+  }
+  section{padding:0 28px 26px}
+  .section-title{
+    margin:24px -28px 16px;
+    padding:11px 28px;
+    background:#f0f3f8;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    font-size:18px;
+  }
+  .problem{
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px;
+    margin:14px 0;
+    break-inside:avoid;
+  }
+  .problem p{margin:0 0 12px}
+  .problem-number{font-weight:800}
+  .problem-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:20px;
+    align-items:center;
+  }
+  .answers{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+  }
+  .answers.two{grid-template-columns:repeat(2,1fr)}
+  .answers.one{grid-template-columns:1fr}
+  .answer-card label{
+    display:block; font-size:13px; font-weight:700; margin-bottom:4px;
+  }
+  .work-label{font-size:12px; color:var(--muted); font-weight:700; margin:12px 0 5px}
+  textarea.work{min-height:92px; resize:vertical}
+  .svgbox{
+    background:#fff;
+    border-radius:10px;
+    padding:5px;
+  }
+  svg{width:100%; height:auto; display:block}
+  .ratio-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px 18px;
+  }
+  .ratio-item{
+    display:grid; grid-template-columns:34px 1fr; gap:6px; align-items:center;
+  }
+  .ratio-item b{text-align:right}
+  .teacher-note{
+    margin:16px 28px 26px;
+    padding:12px 14px;
+    border:1px dashed #d0a35f;
+    background:#fff9ef;
+    color:#704214;
+    border-radius:8px;
+    font-size:13px;
+  }
+  .footer-note{
+    padding:0 28px 26px;
+    color:var(--muted);
+    font-size:12px;
+    text-align:center;
+  }
+
+  details.hint{
+    margin:12px 0 4px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    background:#f8fafc;
+    padding:8px 10px;
+  }
+  details.hint summary{
+    cursor:pointer;
+    font-weight:700;
+    color:#2457a6;
+  }
+  details.hint div{padding-top:7px;font-size:13px;color:#475467}
+
+
+
+  .frac{
+    display:inline-flex;
+    flex-direction:column;
+    vertical-align:middle;
+    text-align:center;
+    line-height:1.05;
+    margin:0 .12em;
+    min-width:1.25em;
+  }
+  .frac .num{
+    display:block;
+    padding:0 .14em .08em;
+    border-bottom:1.4px solid currentColor;
+  }
+  .frac .den{
+    display:block;
+    padding:.08em .14em 0;
+  }
+
+  details.solution{
+    margin:8px 0 10px;
+    border:1px solid #b7d8bd;
+    border-radius:8px;
+    background:#f4fbf5;
+    padding:8px 10px;
+  }
+  details.solution summary{
+    cursor:pointer;
+    font-weight:700;
+    color:#246b35;
+  }
+  details.solution div{
+    padding-top:7px;
+    font-size:13px;
+    color:#344054;
+  }
+  details.solution .eq{
+    display:block;
+    margin:5px 0;
+    font-family:"Cambria Math","Times New Roman",serif;
+    font-size:15px;
+  }
+
+  @media (max-width:760px){
+    .student-info,.problem-grid{grid-template-columns:1fr}
+    .answers,.answers.two{grid-template-columns:1fr}
+    .progress-wrap{width:100%; margin-left:0}
+    .progress-label{text-align:left}
+    main{width:min(100% - 14px,980px); margin-top:8px}
+    section{padding-left:14px;padding-right:14px}
+    .section-title{margin-left:-14px;margin-right:-14px;padding-left:14px}
+    header,.student-info{padding-left:14px;padding-right:14px}
+    .directions,.teacher-note{margin-left:14px;margin-right:14px}
+  }
+  @media print{
+    body{background:#fff}
+    .toolbar{display:none}
+    main{width:100%; margin:0}
+    .sheet{box-shadow:none;border:none;border-radius:0}
+    .problem{break-inside:avoid}
+    .teacher-note{display:none}
+    input,textarea{border-color:#777!important}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button class="primary" onclick="window.print()">Print / Save PDF</button>
+  <button onclick="downloadResponses()">Download Responses</button>
+  <button onclick="clearAnswers()">Clear Answers</button>
+  <div class="progress-wrap">
+    <div class="progress-label" id="progressText">0 of 40 points attempted</div>
+    <div class="progress"><div id="progressBar"></div></div>
+  </div>
+</div>
+
+<main>
+<div class="sheet">
+<header>
+  <h1>MATHEMATICS 10</h1>
+  <h1>FORMATIVE ASSESSMENT</h1>
+  <h2>Triangle Trigonometry | Law of Sines | Ambiguous Case | Law of Cosines</h2>
+</header>
+
+<div class="student-info">
+  <div class="field"><label>Name</label><input type="text" id="name" data-save /></div>
+  <div class="field"><label>Section</label><input type="text" id="section" data-save /></div>
+  <div class="field"><label>Date</label><input type="date" id="date" data-save /></div>
+</div>
+
+<div class="directions"><b>Directions:</b> Solve each problem. Show complete solutions. Round lengths to the nearest tenth unless otherwise stated, and angles to the nearest degree when needed. <b>You may attempt each item first, then use the hint only when needed. Check your solution and answer after.</b></div>
+
+<section>
+  <h3 class="section-title">Solving Right Triangles (SOH-CAH-TOA)</h3>
+
+  <div class="problem">
+    <div class="problem-grid">
+      <div>
+        <p><b>Find the six trigonometric ratios of angle B.</b></p>
+        <details class="hint"><summary>Hint</summary><div>Relative to ∠B, identify the opposite side, adjacent side, and hypotenuse. Then use SOH-CAH-TOA and the reciprocal ratios.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b> Relative to ∠B: opposite = 15, adjacent = 8, hypotenuse = 17.
+<span class="eq">1. sin B = <span class="frac"><span class="num">15</span><span class="den">17</span></span></span>
+<span class="eq">2. cos B = <span class="frac"><span class="num">8</span><span class="den">17</span></span></span>
+<span class="eq">3. tan B = <span class="frac"><span class="num">15</span><span class="den">8</span></span></span>
+<span class="eq">4. csc B = <span class="frac"><span class="num">17</span><span class="den">15</span></span></span>
+<span class="eq">5. sec B = <span class="frac"><span class="num">17</span><span class="den">8</span></span></span>
+<span class="eq">6. cot B = <span class="frac"><span class="num">8</span><span class="den">15</span></span></span></div></details>
+        <div class="ratio-grid">
+          <div class="ratio-item"><b>1.</b><input type="text" id="q1" data-score="1" data-save /></div>
+          <div class="ratio-item"><b>4.</b><input type="text" id="q4" data-score="1" data-save /></div>
+          <div class="ratio-item"><b>2.</b><input type="text" id="q2" data-score="1" data-save /></div>
+          <div class="ratio-item"><b>5.</b><input type="text" id="q5" data-score="1" data-save /></div>
+          <div class="ratio-item"><b>3.</b><input type="text" id="q3" data-score="1" data-save /></div>
+          <div class="ratio-item"><b>6.</b><input type="text" id="q6" data-score="1" data-save /></div>
+        </div>
+      </div>
+      <div class="svgbox">
+        <svg viewBox="0 0 420 250" aria-label="Right triangle with sides 8, 15, and 17">
+          <line x1="55" y1="210" x2="345" y2="210" stroke="#202632" stroke-width="4"/>
+          <line x1="345" y1="210" x2="345" y2="55" stroke="#202632" stroke-width="4"/>
+          <line x1="55" y1="210" x2="345" y2="55" stroke="#202632" stroke-width="4"/>
+          <polyline points="325,210 325,190 345,190" fill="none" stroke="#202632" stroke-width="3"/>
+          <text x="35" y="230" font-size="22" font-style="italic">A</text>
+          <text x="350" y="52" font-size="22" font-style="italic">B</text>
+          <text x="351" y="230" font-size="22" font-style="italic">C</text>
+          <text x="190" y="236" font-size="21">15</text>
+          <text x="356" y="140" font-size="21">8</text>
+          <text x="182" y="120" font-size="21">17</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="problem-grid">
+      <div>
+        <p>In the right triangle shown, ∠A = 35° and BC = 12 cm. Find AB, AC, and ∠C.</p>
+        <details class="hint"><summary>Hint</summary><div>BC is opposite ∠A. Use sine to find the hypotenuse AC, tangent to find the adjacent side AB, and remember that the two acute angles of a right triangle are complementary.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">sin 35° = <span class="frac"><span class="num">12</span><span class="den">AC</span></span> → AC = <span class="frac"><span class="num">12</span><span class="den">sin 35°</span></span> ≈ 20.9 cm</span>
+<span class="eq">tan 35° = <span class="frac"><span class="num">12</span><span class="den">AB</span></span> → AB = <span class="frac"><span class="num">12</span><span class="den">tan 35°</span></span> ≈ 17.1 cm</span>
+<span class="eq">∠C = 90° − 35° = 55°</span>
+<b>Answers:</b> AB ≈ 17.1 cm, AC ≈ 20.9 cm, ∠C = 55°.</div></details>
+        <div class="answers">
+          <div class="answer-card"><label>7. AB =</label><input type="text" id="q7" data-score="1" data-save /></div>
+          <div class="answer-card"><label>8. AC =</label><input type="text" id="q8" data-score="1" data-save /></div>
+          <div class="answer-card"><label>9. ∠C =</label><input type="text" id="q9" data-score="1" data-save /></div>
+        </div>
+        <div class="work-label">Solution / Work</div>
+        <textarea class="work" id="work7_9" data-save></textarea>
+      </div>
+      <div class="svgbox">
+        <svg viewBox="0 0 430 250" aria-label="Right triangle with angle A 35 degrees and BC 12 centimeters">
+          <line x1="45" y1="210" x2="355" y2="210" stroke="#4287a8" stroke-width="4"/>
+          <line x1="355" y1="210" x2="355" y2="60" stroke="#4287a8" stroke-width="4"/>
+          <line x1="45" y1="210" x2="355" y2="60" stroke="#4287a8" stroke-width="4"/>
+          <polyline points="335,210 335,190 355,190" fill="none" stroke="#555" stroke-width="3"/>
+          <path d="M95 210 A50 50 0 0 0 86 183" fill="none" stroke="#4287a8" stroke-width="3"/>
+          <text x="55" y="198" font-size="20">35°</text>
+          <text x="365" y="140" font-size="20">12 cm</text>
+          <text x="28" y="230" font-size="20" font-style="italic">A</text>
+          <text x="360" y="230" font-size="20" font-style="italic">B</text>
+          <text x="360" y="58" font-size="20" font-style="italic">C</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="problem-grid">
+      <div>
+        <p>From the given triangle ACB, find b, ∠A, and ∠B.</p>
+        <details class="hint"><summary>Hint</summary><div>First use the Pythagorean Theorem to find b. Then use an inverse trigonometric ratio to find one acute angle. The other acute angle is its complement.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">b² + 10² = 24²</span>
+<span class="eq">b = √(576 − 100) = √476 ≈ 21.8</span>
+<span class="eq">sin A = <span class="frac"><span class="num">10</span><span class="den">24</span></span> → A ≈ 24.6°</span>
+<span class="eq">B = 90° − 24.6° ≈ 65.4°</span>
+<b>Answers:</b> b ≈ 21.8, ∠A ≈ 24.6°, ∠B ≈ 65.4°.</div></details>
+        <div class="answers">
+          <div class="answer-card"><label>10. b =</label><input type="text" id="q10" data-score="1" data-save /></div>
+          <div class="answer-card"><label>11. ∠A =</label><input type="text" id="q11" data-score="1" data-save /></div>
+          <div class="answer-card"><label>12. ∠B =</label><input type="text" id="q12" data-score="1" data-save /></div>
+        </div>
+        <div class="work-label">Solution / Work</div>
+        <textarea class="work" id="work10_12" data-save></textarea>
+      </div>
+      <div class="svgbox">
+        <svg viewBox="0 0 430 260" aria-label="Right triangle ACB with CB 10, BA 24, base b">
+          <line x1="75" y1="215" x2="355" y2="215" stroke="#202632" stroke-width="4"/>
+          <line x1="75" y1="215" x2="75" y2="60" stroke="#202632" stroke-width="4"/>
+          <line x1="75" y1="60" x2="355" y2="215" stroke="#202632" stroke-width="4"/>
+          <polyline points="75,195 95,195 95,215" fill="none" stroke="#202632" stroke-width="3"/>
+          <path d="M320 215 A35 35 0 0 0 325 195" fill="none" stroke="#202632" stroke-width="3"/>
+          <text x="49" y="235" font-size="20" font-style="italic">C</text>
+          <text x="58" y="55" font-size="20" font-style="italic">B</text>
+          <text x="360" y="235" font-size="20" font-style="italic">A</text>
+          <text x="50" y="145" font-size="20">10</text>
+          <text x="225" y="120" font-size="20">24</text>
+          <text x="210" y="240" font-size="20" font-style="italic">b</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem">
+    <p><span class="problem-number">13–14.</span> Given triangle ACB, with C as the right angle, the value of
+      <span style="white-space:nowrap;font-weight:700">sin B = √5 / 4</span>, find tan A.</p>
+    <details class="hint"><summary>Hint</summary><div>For ∠B, the given ratio gives the opposite side and the hypotenuse. Find the adjacent side of ∠B first. A right-triangle sketch may help.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b> Since sin B = <span class="frac"><span class="num">opposite</span><span class="den">hypotenuse</span></span> = <span class="frac"><span class="num">√5</span><span class="den">4</span></span>, take the opposite side as √5 and the hypotenuse as 4.
+<span class="eq">adjacent² + (√5)² = 4²</span>
+<span class="eq">adjacent = √11</span>
+For ∠A, opposite = √11 and adjacent = √5.
+<span class="eq">tan A = <span class="frac"><span class="num">√11</span><span class="den">√5</span></span> = <span class="frac"><span class="num">√55</span><span class="den">5</span></span></span>
+<b>Answer:</b> tan A = <span class="frac"><span class="num">√55</span><span class="den">5</span></span>.</div></details>
+    <div class="answers one"><div class="answer-card"><label>Final answer</label><input type="text" id="q13_14" data-score="2" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work13_14" data-save></textarea>
+  </div>
+
+  <h3 class="section-title">Law of Sines</h3>
+
+  <div class="problem">
+    <div class="problem-grid">
+      <div>
+        <p><span class="problem-number">15–16.</span> For the triangle shown, ∠A = 48°, ∠B = 67°, and side AB = 14 cm. Find side AC.</p>
+        <details class="hint"><summary>Hint</summary><div>Find ∠C first using the angle sum of a triangle. Then pair each side with its opposite angle and apply the Law of Sines.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">C = 180° − 48° − 67° = 65°</span>
+AC is opposite ∠B, while AB = 14 cm is opposite ∠C.
+<span class="eq"><span class="frac"><span class="num">AC</span><span class="den">sin 67°</span></span> = <span class="frac"><span class="num">14</span><span class="den">sin 65°</span></span></span>
+<span class="eq">AC = <span class="frac"><span class="num">14(sin 67°)</span><span class="den">sin 65°</span></span> ≈ 14.2 cm</span>
+<b>Answer:</b> AC ≈ 14.2 cm.</div></details>
+        <div class="answers one"><div class="answer-card"><label>AC =</label><input type="text" id="q15_16" data-score="2" data-save /></div></div>
+        <div class="work-label">Solution / Work</div>
+        <textarea class="work" id="work15_16" data-save></textarea>
+      </div>
+      <div class="svgbox">
+        <svg viewBox="0 0 430 260" aria-label="Triangle ABC with angles A 48, B 67, and AB 14 centimeters">
+          <line x1="65" y1="215" x2="350" y2="215" stroke="#3f86a8" stroke-width="4"/>
+          <line x1="65" y1="215" x2="175" y2="55" stroke="#3f86a8" stroke-width="4"/>
+          <line x1="175" y1="55" x2="350" y2="215" stroke="#3f86a8" stroke-width="4"/>
+          <text x="48" y="235" font-size="20" font-style="italic">A</text>
+          <text x="355" y="235" font-size="20" font-style="italic">B</text>
+          <text x="170" y="48" font-size="20" font-style="italic">C</text>
+          <text x="83" y="202" font-size="18">48°</text>
+          <text x="315" y="202" font-size="18">67°</text>
+          <text x="180" y="240" font-size="19">14 cm</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem">
+    <p><span class="problem-number">17–18.</span> In △PQR, ∠P = 36°, ∠R = 82°, and p = 12 cm. Find r. (SAA)</p>
+    <details class="hint"><summary>Hint</summary><div>Side p is opposite ∠P and side r is opposite ∠R. Set up the Law of Sines using these two opposite pairs.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq"><span class="frac"><span class="num">r</span><span class="den">sin 82°</span></span> = <span class="frac"><span class="num">12</span><span class="den">sin 36°</span></span></span>
+<span class="eq">r = <span class="frac"><span class="num">12(sin 82°)</span><span class="den">sin 36°</span></span> ≈ 20.2 cm</span>
+<b>Answer:</b> r ≈ 20.2 cm.</div></details>
+    <div class="answers one"><div class="answer-card"><label>r =</label><input type="text" id="q17_18" data-score="2" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work17_18" data-save></textarea>
+  </div>
+
+  <div class="problem">
+    <p><span class="problem-number">19–20.</span> In △ABC, ∠A = 52°, ∠B = 71°, and side c = 18 m. Find side a. (ASA)</p>
+    <details class="hint"><summary>Hint</summary><div>Find ∠C first. Then use the opposite pairs a ↔ ∠A and c ↔ ∠C in the Law of Sines.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">C = 180° − 52° − 71° = 57°</span>
+<span class="eq"><span class="frac"><span class="num">a</span><span class="den">sin 52°</span></span> = <span class="frac"><span class="num">18</span><span class="den">sin 57°</span></span></span>
+<span class="eq">a = <span class="frac"><span class="num">18(sin 52°)</span><span class="den">sin 57°</span></span> ≈ 16.9 m</span>
+<b>Answer:</b> a ≈ 16.9 m.</div></details>
+    <div class="answers one"><div class="answer-card"><label>a =</label><input type="text" id="q19_20" data-score="2" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work19_20" data-save></textarea>
+  </div>
+
+  <div class="problem">
+    <p><span class="problem-number">21–22.</span> In △ABC, ∠B = 42°, side b = 25, and side c = 18 m. Find ∠C.</p>
+    <details class="hint"><summary>Hint</summary><div>Use the Law of Sines: pair side b with ∠B and side c with ∠C. Solve first for sin C, then use the inverse sine key.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq"><span class="frac"><span class="num">sin C</span><span class="den">18</span></span> = <span class="frac"><span class="num">sin 42°</span><span class="den">25</span></span></span>
+<span class="eq">sin C = <span class="frac"><span class="num">18(sin 42°)</span><span class="den">25</span></span> ≈ 0.4818</span>
+<span class="eq">C = sin⁻¹(0.4818) ≈ 28.8°</span>
+The supplementary angle is not valid because 42° + 151.2° &gt; 180°.
+<b>Answer:</b> ∠C ≈ 29°.</div></details>
+    <div class="answers one"><div class="answer-card"><label>∠C =</label><input type="text" id="q21_22" data-score="2" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work21_22" data-save></textarea>
+  </div>
+
+  <h3 class="section-title">Ambiguous Case (SSA)</h3>
+
+  <div class="problem">
+    <p><span class="problem-number">23–24.</span> In △ABC, ∠A = 30°, a = 10 cm, and b = 16 cm. Determine whether a triangle exists. If it does, identify the value of ∠B.</p>
+    <details class="hint"><summary>Hint</summary><div>This is SSA. Use the Law of Sines to find the first possible ∠B. Then check its supplementary angle, 180° − B₁. A possible angle must keep A + B below 180°.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">sin B = <span class="frac"><span class="num">16(sin 30°)</span><span class="den">10</span></span> = 0.8</span>
+<span class="eq">B₁ = sin⁻¹(0.8) ≈ 53.1°</span>
+<span class="eq">B₂ = 180° − 53.1° ≈ 126.9°</span>
+Both satisfy A + B &lt; 180°.
+<b>Answer:</b> Two triangles; ∠B ≈ 53.1° or 126.9°.</div></details>
+    <div class="answers one"><div class="answer-card"><label>Conclusion / ∠B</label><input type="text" id="q23_24" data-score="2" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work23_24" data-save></textarea>
+  </div>
+
+  <div class="problem">
+    <p><span class="problem-number">25–26.</span> In △ABC, ∠A = 120°, a = 15 cm, and b = 8 cm. Determine the number of possible triangles and solve for ∠B if it exists.</p>
+    <details class="hint"><summary>Hint</summary><div>Find B₁ using the Law of Sines. Then compute B₂ = 180° − B₁ and test whether A + B₂ is less than 180°.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">sin B = <span class="frac"><span class="num">8(sin 120°)</span><span class="den">15</span></span> ≈ 0.4619</span>
+<span class="eq">B₁ = sin⁻¹(0.4619) ≈ 27.5°</span>
+<span class="eq">B₂ = 180° − 27.5° = 152.5°</span>
+Since 120° + 152.5° &gt; 180°, B₂ is invalid.
+<b>Answer:</b> One triangle; ∠B ≈ 27.5°.</div></details>
+    <div class="answers one"><div class="answer-card"><label>Number of triangles and ∠B</label><input type="text" id="q25_26" data-score="2" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work25_26" data-save></textarea>
+  </div>
+
+  <div class="problem">
+    <p><span class="problem-number">27–28.</span> In △ABC, ∠A = 80°, a = 10 cm, and b = 16 cm. Determine the number of possible triangles. Find all possible values of ∠B.</p>
+    <details class="hint"><summary>Hint</summary><div>Use the Law of Sines to calculate sin B. If the resulting sine value is greater than 1, the inverse sine is undefined and no triangle exists.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">sin B = <span class="frac"><span class="num">16(sin 80°)</span><span class="den">10</span></span> ≈ 1.5757</span>
+Since a sine value cannot be greater than 1, no angle B exists.
+<b>Answer:</b> No triangle; 0 solutions.</div></details>
+    <div class="answers one"><div class="answer-card"><label>Number of triangles and ∠B</label><input type="text" id="q27_28" data-score="2" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work27_28" data-save></textarea>
+  </div>
+
+  <h3 class="section-title">Angles of Elevation and Depression</h3>
+
+  <div class="problem">
+    <p><span class="problem-number">29–31.</span> From the top of a 45 m lighthouse, the angle of depression to a boat is 32°. Find the horizontal distance from the base of the lighthouse to the boat.</p>
+    <details class="hint"><summary>Hint</summary><div>The angle of depression equals the angle of elevation from the boat. Use tangent with the lighthouse height as the opposite side and the horizontal distance as the adjacent side.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b> Let x be the horizontal distance.
+<span class="eq">tan 32° = <span class="frac"><span class="num">45</span><span class="den">x</span></span></span>
+<span class="eq">x = <span class="frac"><span class="num">45</span><span class="den">tan 32°</span></span> ≈ 72.0 m</span>
+<b>Answer:</b> The boat is approximately 72.0 m from the base of the lighthouse.</div></details>
+    <div class="answers one"><div class="answer-card"><label>Horizontal distance =</label><input type="text" id="q29_31" data-score="3" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work29_31" data-save></textarea>
+  </div>
+
+  <div class="problem">
+    <div class="problem-grid">
+      <div>
+        <p><span class="problem-number">32–34.</span> Two observation points, A and B, are on level ground on the same side of a tower. Point B is 30 m closer to the base of the tower than point A. The angle of elevation to the top of the tower is 35° from point A and 52° from point B. Find the height of the tower to the nearest tenth of a meter.</p>
+        <details class="hint"><summary>Hint</summary><div>Let the distance from B to the tower be x. Then the distance from A to the tower is x + 30. Write one tangent equation from A and another from B; both expressions represent the same tower height.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b> Let x be the distance from B to the tower and h be the tower height.
+<span class="eq">tan 52° = <span class="frac"><span class="num">h</span><span class="den">x</span></span> → h = x tan 52°</span>
+<span class="eq">tan 35° = <span class="frac"><span class="num">h</span><span class="den">x + 30</span></span> → h = (x + 30)tan 35°</span>
+Equate the two expressions:
+<span class="eq">x tan 52° = (x + 30)tan 35°</span>
+<span class="eq">x ≈ 36.2 m</span>
+<span class="eq">h = 36.2(tan 52°) ≈ 46.4 m</span>
+<b>Answer:</b> Height ≈ 46.4 m.</div></details>
+        <div class="answers one"><div class="answer-card"><label>Height of tower =</label><input type="text" id="q32_34" data-score="3" data-save /></div></div>
+        <div class="work-label">Solution / Work</div>
+        <textarea class="work" id="work32_34" data-save></textarea>
+      </div>
+      <div class="svgbox">
+        <svg viewBox="0 0 520 330" aria-label="Tower with observation points A and B, 30 meters apart, angles 35 and 52 degrees">
+          <line x1="35" y1="285" x2="485" y2="285" stroke="#456b39" stroke-width="5"/>
+          <rect x="420" y="78" width="42" height="207" fill="#e7d3a9" stroke="#333" stroke-width="3"/>
+          <polygon points="410,78 441,42 472,78" fill="#b75b3e" stroke="#333" stroke-width="3"/>
+          <line x1="75" y1="285" x2="441" y2="45" stroke="#222" stroke-width="3" stroke-dasharray="8 7"/>
+          <line x1="205" y1="285" x2="441" y2="45" stroke="#222" stroke-width="3" stroke-dasharray="8 7"/>
+          <path d="M115 285 A40 40 0 0 0 108 263" fill="none" stroke="#2457a6" stroke-width="3"/>
+          <path d="M245 285 A40 40 0 0 0 232 253" fill="none" stroke="#2457a6" stroke-width="3"/>
+          <text x="88" y="265" fill="#2457a6" font-size="18">35°</text>
+          <text x="219" y="257" fill="#2457a6" font-size="18">52°</text>
+          <text x="66" y="310" font-size="20" font-style="italic">A</text>
+          <text x="197" y="310" font-size="20" font-style="italic">B</text>
+          <text x="436" y="310" font-size="20" font-style="italic">C</text>
+          <line x1="75" y1="315" x2="205" y2="315" stroke="#2457a6" stroke-width="2"/>
+          <text x="120" y="326" fill="#2457a6" font-size="17">30 m</text>
+          <line x1="475" y1="285" x2="475" y2="78" stroke="#2457a6" stroke-width="2" stroke-dasharray="6 5"/>
+          <text x="485" y="188" fill="#2457a6" font-size="20" font-style="italic">h</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="section-title">Law of Cosines</h3>
+
+  <div class="problem">
+    <p><span class="problem-number">35–37.</span> Two sides of a triangle measure 9 cm and 13 cm, and the included angle is 58°. Find the length of the third side.</p>
+    <details class="hint"><summary>Hint</summary><div>Use the Law of Cosines because two sides and the included angle are known: c² = a² + b² − 2ab cos C.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">c² = 9² + 13² − 2(9)(13)cos 58°</span>
+<span class="eq">c² ≈ 125.999</span>
+<span class="eq">c ≈ 11.2 cm</span>
+<b>Answer:</b> The third side is approximately 11.2 cm.</div></details>
+    <div class="answers one"><div class="answer-card"><label>Third side =</label><input type="text" id="q35_37" data-score="3" data-save /></div></div>
+    <div class="work-label">Solution / Work</div>
+    <textarea class="work" id="work35_37" data-save></textarea>
+  </div>
+
+  <div class="problem">
+    <div class="problem-grid">
+      <div>
+        <p><span class="problem-number">38–40.</span> A triangular garden has sides measuring 12 m, 15 m, and 20 m. The 20-meter side is opposite angle C. Find the measure of ∠C to the nearest degree.</p>
+        <details class="hint"><summary>Hint</summary><div>Use the Law of Cosines with 20 as the side opposite ∠C. Rearrange the formula to isolate cos C, then use cos⁻¹.</div></details>
+<details class="solution"><summary>Show Solution</summary><div><b>Solution:</b>
+<span class="eq">20² = 12² + 15² − 2(12)(15)cos C</span>
+<span class="eq">cos C = <span class="frac"><span class="num">12² + 15² − 20²</span><span class="den">2·12·15</span></span> = <span class="frac"><span class="num">−31</span><span class="den">360</span></span></span>
+<span class="eq">C = cos⁻¹(<span class="frac"><span class="num">−31</span><span class="den">360</span></span>) ≈ 94.9°</span>
+<b>Answer:</b> ∠C ≈ 95°.</div></details>
+        <div class="answers one"><div class="answer-card"><label>∠C =</label><input type="text" id="q38_40" data-score="3" data-save /></div></div>
+        <div class="work-label">Solution / Work</div>
+        <textarea class="work" id="work38_40" data-save></textarea>
+      </div>
+      <div class="svgbox">
+        <svg viewBox="0 0 430 270" aria-label="Triangular garden with sides 12, 15, and 20 meters, angle C opposite 20 meters">
+          <polygon points="65,220 350,220 255,55" fill="#eef7e9" stroke="#2f5f34" stroke-width="4"/>
+          <text x="48" y="242" font-size="20" font-style="italic">A</text>
+          <text x="356" y="242" font-size="20" font-style="italic">B</text>
+          <text x="250" y="48" font-size="20" font-style="italic">C</text>
+          <text x="185" y="246" font-size="19">20 m</text>
+          <text x="140" y="135" font-size="19">12 m</text>
+          <text x="305" y="135" font-size="19">15 m</text>
+          <path d="M238 83 A34 34 0 0 1 274 85" fill="none" stroke="#2457a6" stroke-width="3"/>
+          <text x="251" y="101" fill="#2457a6" font-size="19">C</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<div class="footer-note">Responses are saved automatically in this browser. No answers are sent to a server.</div>
+</div>
+</main>
+
+<script>
+const SAVE_PREFIX = "math10_trig_fa_";
+const savables = [...document.querySelectorAll("[data-save]")];
+
+function saveAll(){
+  savables.forEach(el => localStorage.setItem(SAVE_PREFIX + el.id, el.value));
+  updateProgress();
+}
+function loadAll(){
+  savables.forEach(el => {
+    const v = localStorage.getItem(SAVE_PREFIX + el.id);
+    if(v !== null) el.value = v;
+  });
+  updateProgress();
+}
+function updateProgress(){
+  let attempted = 0, total = 0;
+  document.querySelectorAll("[data-score]").forEach(el => {
+    const score = Number(el.dataset.score || 0);
+    total += score;
+    if(el.value.trim() !== "") attempted += score;
+  });
+  document.getElementById("progressText").textContent = `${attempted} of ${total} points attempted`;
+  document.getElementById("progressBar").style.width = `${(attempted/total)*100}%`;
+}
+savables.forEach(el => el.addEventListener("input", saveAll));
+
+function clearAnswers(){
+  if(!confirm("Clear all saved student information, answers, and solution work?")) return;
+  savables.forEach(el => {
+    el.value = "";
+    localStorage.removeItem(SAVE_PREFIX + el.id);
+  });
+  updateProgress();
+}
+
+function downloadResponses(){
+  const lines = [];
+  lines.push("MATHEMATICS 10 – FORMATIVE ASSESSMENT");
+  lines.push("Triangle Trigonometry | Law of Sines | Ambiguous Case | Law of Cosines");
+  lines.push("");
+  lines.push("Name: " + document.getElementById("name").value);
+  lines.push("Section: " + document.getElementById("section").value);
+  lines.push("Date: " + document.getElementById("date").value);
+  lines.push("");
+  document.querySelectorAll("[data-score]").forEach(el => {
+    const label = el.closest(".answer-card")?.querySelector("label")?.innerText || el.id;
+    lines.push(label + " " + el.value);
+  });
+  lines.push("");
+  document.querySelectorAll("textarea.work").forEach(el => {
+    if(el.value.trim()){
+      lines.push(el.id.replace("work","Work for ") + ":");
+      lines.push(el.value);
+      lines.push("");
+    }
+  });
+  const blob = new Blob([lines.join("\n")], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Math10_Formative_Assessment_Responses.txt";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+loadAll();
+</script>
+</body>
+</html>
