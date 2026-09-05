@@ -1,0 +1,143 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Law of Cosines Practice</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f6f8f3;color:#1f2937;margin:0;padding:24px;line-height:1.6}
+.container{max-width:920px;margin:auto}
+.header{background:#355e3b;color:white;padding:22px 26px;border-radius:16px;margin-bottom:22px}
+.header h1{margin:0 0 6px}.header p{margin:0}
+.card{background:white;border:1px solid #d5dfd0;border-radius:16px;padding:26px;margin:22px 0;box-shadow:0 4px 12px rgba(0,0,0,.07)}
+h2,h3{color:#315d39}
+.problem{background:#eef6eb;border-left:6px solid #65966c;padding:15px 18px;border-radius:8px}
+.drawing{text-align:center;margin:20px 0}
+button{background:#4f7d57;color:#fff;border:0;padding:10px 17px;margin:7px 7px 7px 0;border-radius:8px;font-size:15px;cursor:pointer}
+button:hover{background:#3e6846}
+.hidden{display:none;margin-top:13px;padding:16px;background:#fafcf8;border:1px solid #ccd8c7;border-radius:10px}
+.math{font-family:"Cambria Math","Times New Roman",serif;font-size:1.08em}
+.answer{font-weight:bold;color:#245c31;font-size:1.15em}
+.frac{display:inline-block;vertical-align:middle;text-align:center;line-height:1.12;margin:0 3px}
+.frac .top{display:block;border-bottom:1.5px solid #111;padding:0 5px 2px}
+.frac .bottom{display:block;padding:2px 5px 0}
+.instruction{font-weight:bold}
+hr{border:0;border-top:1px solid #d8dfd4;margin:25px 0}
+svg text{font-family:Arial,sans-serif}
+</style>
+<script>
+function toggle(id){
+ const e=document.getElementById(id);
+ e.style.display=(e.style.display==="block")?"none":"block";
+}
+</script>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Law of Cosines Practice</h1>
+<p>Finding an Angle and a Missing Side</p>
+</div>
+
+<p class="instruction">Directions: Solve each problem. Attempt the problem first. Use the hint only when needed, then check the complete solution.</p>
+
+<div class="card">
+<h2>Problem 1 – Finding an Angle</h2>
+<div class="problem">
+A triangular garden has side lengths <strong>12 m</strong>, <strong>15 m</strong>, and <strong>20 m</strong>.
+Find the angle opposite the <strong>20-m side</strong>. Round the answer to the nearest degree.
+</div>
+
+<div class="drawing">
+<svg width="520" height="325" viewBox="0 0 520 325" aria-label="Triangle with sides 12, 15, and 20 meters">
+<polygon points="80,270 440,270 250,75" fill="#f4f8f1" stroke="#2f5d3a" stroke-width="4"></polygon>
+<text x="64" y="295" font-size="20" font-weight="bold">A</text>
+<text x="445" y="295" font-size="20" font-weight="bold">B</text>
+<text x="243" y="60" font-size="20" font-weight="bold">C</text>
+<text x="235" y="305" font-size="19">20 m</text>
+<text x="128" y="165" font-size="19">12 m</text>
+<text x="345" y="165" font-size="19">15 m</text>
+<path d="M225 102 A40 40 0 0 1 278 104" fill="none" stroke="#65966c" stroke-width="3"></path>
+<text x="244" y="123" font-size="19" font-weight="bold">C</text>
+</svg>
+</div>
+
+<p><strong>Given:</strong> a = 12 m, b = 15 m, c = 20 m</p>
+<p><strong>Find:</strong> ∠C</p>
+<button onclick="toggle('hint1')">Show Hint</button>
+<button onclick="toggle('solution1')">Show Solution</button>
+
+<div id="hint1" class="hidden">
+<h3>Hint</h3>
+<p>All three sides are known. Use the Law of Cosines:</p>
+<p class="math">c² = a² + b² − 2ab cos C</p>
+<p>Isolate <span class="math">cos C</span>, then use the inverse cosine function.</p>
+</div>
+
+<div id="solution1" class="hidden">
+<h3>Solution</h3>
+<p class="math">c² = a² + b² − 2ab cos C</p>
+<p class="math">20² = 12² + 15² − 2(12)(15) cos C</p>
+<p class="math">400 = 144 + 225 − 360 cos C</p>
+<p class="math">400 = 369 − 360 cos C</p>
+<p class="math">31 = −360 cos C</p>
+<p class="math">cos C =
+<span class="frac"><span class="top">−31</span><span class="bottom">360</span></span>
+</p>
+<p class="math">C = cos<sup>−1</sup>
+(<span class="frac"><span class="top">−31</span><span class="bottom">360</span></span>)
+</p>
+<p class="math">C ≈ 94.94°</p>
+<p class="answer">Final Answer: ∠C ≈ 95°</p>
+</div>
+</div>
+
+<div class="card">
+<h2>Problem 2 – Finding Side b</h2>
+<div class="problem">
+A triangular park has two sides measuring <strong>10 m</strong> and <strong>14 m</strong>.
+The included angle between these two sides is <strong>60°</strong>.
+Find the length of side <strong>b</strong>, which is opposite the 60° angle.
+Round the answer to the nearest tenth of a meter.
+</div>
+
+<div class="drawing">
+<svg width="520" height="325" viewBox="0 0 520 325" aria-label="Triangle with sides 10 and 14 meters, angle B 60 degrees, and missing side b">
+<polygon points="90,270 430,270 260,75" fill="#f4f8f1" stroke="#2f5d3a" stroke-width="4"></polygon>
+<text x="73" y="295" font-size="20" font-weight="bold">B</text>
+<text x="438" y="295" font-size="20" font-weight="bold">A</text>
+<text x="253" y="60" font-size="20" font-weight="bold">C</text>
+<text x="238" y="305" font-size="19">14 m</text>
+<text x="137" y="165" font-size="19">10 m</text>
+<text x="350" y="165" font-size="19" font-weight="bold">b = ?</text>
+<path d="M112 250 A42 42 0 0 1 135 221" fill="none" stroke="#65966c" stroke-width="3"></path>
+<text x="128" y="250" font-size="18" font-weight="bold">60°</text>
+</svg>
+</div>
+
+<p><strong>Given:</strong> a = 10 m, c = 14 m, ∠B = 60°</p>
+<p><strong>Find:</strong> b</p>
+<button onclick="toggle('hint2')">Show Hint</button>
+<button onclick="toggle('solution2')">Show Solution</button>
+
+<div id="hint2" class="hidden">
+<h3>Hint</h3>
+<p>Two sides and their included angle are known. Use the Law of Cosines:</p>
+<p class="math">b² = a² + c² − 2ac cos B</p>
+<p>After finding <span class="math">b²</span>, take the square root to determine <span class="math">b</span>.</p>
+</div>
+
+<div id="solution2" class="hidden">
+<h3>Solution</h3>
+<p class="math">b² = a² + c² − 2ac cos B</p>
+<p class="math">b² = 10² + 14² − 2(10)(14) cos 60°</p>
+<p class="math">b² = 100 + 196 − 280(0.5)</p>
+<p class="math">b² = 296 − 140</p>
+<p class="math">b² = 156</p>
+<p class="math">b = √156</p>
+<p class="math">b ≈ 12.49</p>
+<p class="answer">Final Answer: b ≈ 12.5 m</p>
+</div>
+</div>
+</div>
+
+
+</body></html>

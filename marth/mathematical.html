@@ -1,0 +1,207 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math 10 – The Ambiguous Case | Interactive Worked Examples</title>
+<style>
+:root{
+  --navy:#123a67; --maroon:#8d2230; --gold:#d89b21; --cream:#fffaf0;
+  --green:#2f7d4a; --red:#b83232; --ink:#202124; --muted:#667085; --line:#d6d9df;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f7f6f2;color:var(--ink);line-height:1.5}
+.page{max-width:980px;margin:0 auto;padding:34px 20px 60px}
+.eyebrow{text-align:center;letter-spacing:.16em;font-size:12px;color:var(--gold);font-weight:700;text-transform:uppercase}
+h1{text-align:center;color:var(--maroon);margin:7px 0 2px;font-size:30px}
+.subtitle{text-align:center;color:var(--navy);font-weight:700;margin-bottom:8px}
+.instruction{text-align:center;color:var(--muted);margin:0 0 22px}
+.rule{height:3px;background:var(--maroon);border:0;margin:20px 0 28px}
+.summary{border:1px solid #b9c6d6;border-radius:12px;overflow:hidden;background:white;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-bottom:30px}
+.summary-title{background:var(--navy);color:white;padding:12px 16px;font-weight:700;text-align:center;letter-spacing:.04em}
+.summary-grid{display:grid;grid-template-columns:1.25fr 1fr}
+.cell{padding:13px 16px;border-top:1px solid #d9e0e8}
+.cell:nth-child(odd){border-right:1px solid #d9e0e8}
+.head{background:#eef4fb;font-weight:700;color:var(--navy);text-align:center}
+.no{background:#fff1f1}.two{background:#f2f6ff}.one{background:#f1faf4}
+.result{font-weight:700;text-align:center}
+.section-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--maroon);color:white;border-radius:7px;padding:12px 15px;margin-bottom:8px}
+.badge{background:rgba(255,255,255,.17);border-radius:999px;padding:4px 10px;font-size:12px}
+.small-note{color:var(--muted);font-style:italic;margin:0 2px 14px}
+.controls{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+button{font:inherit;cursor:pointer}
+.outline-btn{background:white;border:1px solid var(--maroon);color:var(--maroon);border-radius:6px;padding:7px 12px}
+.card{border:1px solid #d8b779;border-radius:10px;overflow:hidden;background:white;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;background:#fff}
+.num{width:32px;height:32px;min-width:32px;display:grid;place-items:center;border:1px solid var(--gold);border-radius:50%;color:var(--maroon);font-weight:700;background:#fffaf0}
+.given{flex:1;font-size:16px}.chev{color:var(--maroon);font-size:18px;transition:transform .2s ease}.card.open .chev{transform:rotate(180deg)}
+.content{display:none;padding:0 18px 18px;border-top:1px dashed #d8b779;background:var(--cream)}.card.open .content{display:block}
+.prompt{margin:14px 0 10px;font-weight:700;color:var(--navy)}
+.choice-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:11px}
+.choice{border:1px solid #b7bcc5;background:white;border-radius:8px;padding:9px 13px}.choice.selected{border-color:var(--navy);background:#eef4fb;box-shadow:inset 0 0 0 1px var(--navy)}
+.action-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.check-btn{border:0;border-radius:7px;background:var(--navy);color:white;padding:9px 14px;font-weight:700}
+.hint-btn,.solution-btn{border:1px solid var(--gold);background:white;color:#805600;border-radius:7px;padding:9px 14px}
+.feedback{display:none;margin:9px 0;padding:9px 11px;border-radius:7px;font-weight:700}
+.feedback.correct{display:block;background:#eaf7ee;color:#176b35;border:1px solid #a9d8b7}
+.feedback.wrong{display:block;background:#fff0f0;color:#9c2525;border:1px solid #e4aaaa}
+.hint,.solution{display:none;margin-top:10px;background:white;border-left:4px solid var(--gold);border-radius:6px;padding:12px 14px}
+.solution{border-left-color:var(--navy)}
+.math{font-family:"Cambria Math","Times New Roman",serif;font-size:17px}
+.solution ol{margin:8px 0 0 22px;padding:0}
+.answer{display:inline-block;margin-top:10px;border:1px solid var(--gold);border-radius:6px;background:#fff8e3;padding:6px 10px;color:var(--maroon);font-weight:700}
+.scorebox{margin-top:25px;padding:16px;background:white;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.score{color:var(--maroon);font-size:18px;font-weight:700}.footer{text-align:center;color:#8a8f98;font-size:12px;margin-top:22px}
+@media(max-width:650px){h1{font-size:24px}.summary-grid{grid-template-columns:1fr}.cell:nth-child(odd){border-right:0}.head:nth-child(2){display:none}.card-head{align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="eyebrow">Math 10 · Law of Sines · SSA</div>
+  <h1>The Ambiguous Case</h1>
+  <div class="subtitle">Interactive Worked Examples</div>
+  <p class="instruction">Determine the number of triangles that can be formed with each set of measurements.</p>
+  <hr class="rule">
+
+  <div class="summary">
+    <div class="summary-title">SUMMARY TABLE</div>
+    <div class="summary-grid">
+      <div class="cell head">CONDITION</div><div class="cell head">RESULT</div>
+      <div class="cell no"><span class="math">sin B &gt; 1</span> (ERROR), or <span class="math">A + B₁ &gt; 180°</span></div><div class="cell no result">✕ NO triangle exists</div>
+      <div class="cell two"><span class="math">A + B₁ &lt; 180°</span> and <span class="math">A + B₂ &lt; 180°</span></div><div class="cell two result">△ △ TWO different triangles exist</div>
+      <div class="cell one"><span class="math">A + B₁ &lt; 180°</span> and <span class="math">A + B₂ &gt; 180°</span></div><div class="cell one result">△ Exactly ONE triangle exists</div>
+    </div>
+  </div>
+
+  <div class="section-bar"><strong>Worked Examples – Check Understanding</strong><span class="badge">4 items</span></div>
+  <p class="small-note">Select the number of triangles first. Then check the answer, reveal a hint, or study the complete solution.</p>
+
+  <div class="controls">
+    <button class="outline-btn" onclick="openAll()">Open all</button>
+    <button class="outline-btn" onclick="closeAll()">Close all</button>
+  </div>
+
+  <div class="card" data-answer="2">
+    <div class="card-head" onclick="toggleCard(this)"><div class="num">1</div><div class="given"><strong>Given:</strong> A = 24°, a = 14, b = 27</div><div class="chev">▼</div></div>
+    <div class="content">
+      <div class="prompt">How many triangles can be formed?</div>
+      <div class="choice-row"><button class="choice" onclick="choose(this,0)">0 triangles</button><button class="choice" onclick="choose(this,1)">1 triangle</button><button class="choice" onclick="choose(this,2)">2 triangles</button></div>
+      <div class="action-row"><button class="check-btn" onclick="checkAnswer(this)">Check Answer</button><button class="hint-btn" onclick="toggleBox(this,'hint')">Show Hint</button><button class="solution-btn" onclick="toggleBox(this,'solution')">Show Solution</button></div>
+      <div class="feedback"></div>
+      <div class="hint"><strong>Hint:</strong> Find <span class="math">B₁</span>, then compute <span class="math">B₂ = 180° − B₁</span>. Check whether both angle sums with <span class="math">A</span> are less than 180°.</div>
+      <div class="solution"><strong>Complete Solution</strong>
+        <ol>
+          <li><span class="math">sin B / 27 = sin 24° / 14</span></li>
+          <li><span class="math">sin B = (27 sin 24°) / 14 ≈ 0.7844</span></li>
+          <li><span class="math">B₁ = sin⁻¹(0.7844) ≈ 51.67°</span></li>
+          <li><span class="math">B₂ = 180° − 51.67° = 128.33°</span></li>
+          <li><span class="math">A + B₁ = 24° + 51.67° = 75.67° &lt; 180°</span> ✓</li>
+          <li><span class="math">A + B₂ = 24° + 128.33° = 152.33° &lt; 180°</span> ✓</li>
+        </ol>
+        <span class="answer">Answer: 2 different triangles exist.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-answer="0">
+    <div class="card-head" onclick="toggleCard(this)"><div class="num">2</div><div class="given"><strong>Given:</strong> A = 126°, a = 28.5, b = 39.8</div><div class="chev">▼</div></div>
+    <div class="content">
+      <div class="prompt">How many triangles can be formed?</div>
+      <div class="choice-row"><button class="choice" onclick="choose(this,0)">0 triangles</button><button class="choice" onclick="choose(this,1)">1 triangle</button><button class="choice" onclick="choose(this,2)">2 triangles</button></div>
+      <div class="action-row"><button class="check-btn" onclick="checkAnswer(this)">Check Answer</button><button class="hint-btn" onclick="toggleBox(this,'hint')">Show Hint</button><button class="solution-btn" onclick="toggleBox(this,'solution')">Show Solution</button></div>
+      <div class="feedback"></div>
+      <div class="hint"><strong>Hint:</strong> Calculate <span class="math">sin B = (b sin A)/a</span>. A sine value greater than 1 is impossible.</div>
+      <div class="solution"><strong>Complete Solution</strong>
+        <ol>
+          <li><span class="math">sin B / 39.8 = sin 126° / 28.5</span></li>
+          <li><span class="math">sin B = (39.8 sin 126°) / 28.5 ≈ 1.1298</span></li>
+          <li>Since a sine value cannot be greater than 1, <span class="math">sin⁻¹(1.1298)</span> is undefined or gives an ERROR.</li>
+        </ol>
+        <span class="answer">Answer: 0 triangles — NO triangle exists.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-answer="1">
+    <div class="card-head" onclick="toggleCard(this)"><div class="num">3</div><div class="given"><strong>Given:</strong> A = 72°, a = 37.3, b = 32</div><div class="chev">▼</div></div>
+    <div class="content">
+      <div class="prompt">How many triangles can be formed?</div>
+      <div class="choice-row"><button class="choice" onclick="choose(this,0)">0 triangles</button><button class="choice" onclick="choose(this,1)">1 triangle</button><button class="choice" onclick="choose(this,2)">2 triangles</button></div>
+      <div class="action-row"><button class="check-btn" onclick="checkAnswer(this)">Check Answer</button><button class="hint-btn" onclick="toggleBox(this,'hint')">Show Hint</button><button class="solution-btn" onclick="toggleBox(this,'solution')">Show Solution</button></div>
+      <div class="feedback"></div>
+      <div class="hint"><strong>Hint:</strong> Find both possible values of <span class="math">B</span>. One angle sum will be valid and the other will exceed 180°.</div>
+      <div class="solution"><strong>Complete Solution</strong>
+        <ol>
+          <li><span class="math">sin B / 32 = sin 72° / 37.3</span></li>
+          <li><span class="math">sin B = (32 sin 72°) / 37.3 ≈ 0.8159</span></li>
+          <li><span class="math">B₁ = sin⁻¹(0.8159) ≈ 54.68°</span></li>
+          <li><span class="math">B₂ = 180° − 54.68° = 125.32°</span></li>
+          <li><span class="math">A + B₁ = 72° + 54.68° = 126.68° &lt; 180°</span> ✓</li>
+          <li><span class="math">A + B₂ = 72° + 125.32° = 197.32° &gt; 180°</span> ✕</li>
+        </ol>
+        <span class="answer">Answer: Exactly 1 triangle exists.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-answer="0">
+    <div class="card-head" onclick="toggleCard(this)"><div class="num">4</div><div class="given"><strong>Given:</strong> A = 70°, a = 30, b = 37</div><div class="chev">▼</div></div>
+    <div class="content">
+      <div class="prompt">How many triangles can be formed?</div>
+      <div class="choice-row"><button class="choice" onclick="choose(this,0)">0 triangles</button><button class="choice" onclick="choose(this,1)">1 triangle</button><button class="choice" onclick="choose(this,2)">2 triangles</button></div>
+      <div class="action-row"><button class="check-btn" onclick="checkAnswer(this)">Check Answer</button><button class="hint-btn" onclick="toggleBox(this,'hint')">Show Hint</button><button class="solution-btn" onclick="toggleBox(this,'solution')">Show Solution</button></div>
+      <div class="feedback"></div>
+      <div class="hint"><strong>Hint:</strong> Calculate <span class="math">sin B = (b sin A)/a</span>. Check whether the resulting sine value is possible.</div>
+      <div class="solution"><strong>Complete Solution</strong>
+        <ol>
+          <li><span class="math">sin B / 37 = sin 70° / 30</span></li>
+          <li><span class="math">sin B = (37 sin 70°) / 30 ≈ 1.1590</span></li>
+          <li>Since a sine value cannot be greater than 1, <span class="math">sin⁻¹(1.1590)</span> is undefined or gives an ERROR.</li>
+        </ol>
+        <span class="answer">Answer: 0 triangles — NO triangle exists.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorebox">
+    <div><div style="font-weight:700;color:var(--navy)">Activity Score</div><div class="score" id="score">0 / 4 checked correctly</div></div>
+    <button class="outline-btn" onclick="resetActivity()">Reset Activity</button>
+  </div>
+  <div class="footer">Math 10 · The Ambiguous Case · Law of Sines | SSA</div>
+</div>
+
+<script>
+function toggleCard(head){head.parentElement.classList.toggle('open')}
+function openAll(){document.querySelectorAll('.card').forEach(c=>c.classList.add('open'))}
+function closeAll(){document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'))}
+function choose(btn,value){
+  const card=btn.closest('.card'); card.dataset.selected=value;
+  card.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected');
+}
+function checkAnswer(btn){
+  const card=btn.closest('.card'), fb=card.querySelector('.feedback');
+  if(card.dataset.selected===undefined){fb.className='feedback wrong';fb.textContent='Please select 0, 1, or 2 triangles first.';return}
+  if(Number(card.dataset.selected)===Number(card.dataset.answer)){fb.className='feedback correct';fb.textContent='✓ Correct!';card.dataset.correct='yes'}
+  else{fb.className='feedback wrong';fb.textContent='✕ Not yet. Review the summary table or reveal the hint, then try again.';card.dataset.correct='no'}
+  updateScore();
+}
+function toggleBox(btn,type){
+  const box=btn.closest('.card').querySelector('.'+type), visible=box.style.display==='block';
+  box.style.display=visible?'none':'block'; btn.textContent=(visible?'Show ':'Hide ')+(type==='hint'?'Hint':'Solution');
+}
+function updateScore(){
+  const n=[...document.querySelectorAll('.card')].filter(c=>c.dataset.correct==='yes').length;
+  document.getElementById('score').textContent=n+' / 4 checked correctly';
+}
+function resetActivity(){
+  document.querySelectorAll('.card').forEach(card=>{
+    delete card.dataset.selected; delete card.dataset.correct; card.classList.remove('open');
+    card.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected'));
+    const fb=card.querySelector('.feedback'); fb.className='feedback'; fb.textContent='';
+    card.querySelectorAll('.hint,.solution').forEach(b=>b.style.display='none');
+    card.querySelector('.hint-btn').textContent='Show Hint'; card.querySelector('.solution-btn').textContent='Show Solution';
+  });
+  updateScore(); window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+
+
+</body></html>

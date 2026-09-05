@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mathing my bath</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root{
+  --void:#07060b;
+  --abyss:#120c1a;
+  --abyss-line:#2a1f38;
+  --bone:#d8d0c4;
+  --bone-dim:#8f8778;
+  --violet:#6a3fa0;
+  --violet-glow:#9b6fd1;
+  --ember:#7c2038;
+  --sigil:#b98cff;
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% -5%, rgba(106,63,160,.18), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 85% 110%, rgba(124,32,56,.12), transparent 60%),
+    var(--void);
+  color:var(--bone);
+  font-family:'EB Garamond', Georgia, serif;
+  font-size:18px;
+  line-height:1.6;
+}
+
+.veil{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0px, transparent 1px, transparent 2px);
+  z-index:1;
+}
+
+.wrap{
+  position:relative;
+  z-index:2;
+  max-width:760px;
+  margin:0 auto;
+  padding:72px 28px 100px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero{
+  text-align:center;
+  margin-bottom:64px;
+}
+
+.sigil{
+  width:120px;
+  height:120px;
+  margin:0 auto 28px;
+  animation:breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe{
+  0%,100%{ filter:drop-shadow(0 0 6px rgba(155,111,209,.35)); opacity:.85; }
+  50%{ filter:drop-shadow(0 0 16px rgba(155,111,209,.65)); opacity:1; }
+}
+
+.eyebrow{
+  font-family:'Cinzel', serif;
+  font-size:13px;
+  letter-spacing:.32em;
+  color:var(--sigil);
+  margin:0 0 14px;
+}
+
+h1{
+  font-family:'Cinzel', serif;
+  font-weight:700;
+  font-size:44px;
+  letter-spacing:.03em;
+  margin:0 0 18px;
+  color:var(--bone);
+  text-shadow:0 0 22px rgba(155,111,209,.25);
+}
+
+.hero p{
+  max-width:46ch;
+  margin:0 auto;
+  color:var(--bone-dim);
+  font-style:italic;
+  font-size:19px;
+}
+
+/* ---------- Divider ---------- */
+
+.divider{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin:0 0 44px;
+  color:var(--violet-glow);
+}
+.divider::before,
+.divider::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--abyss-line), transparent);
+}
+.divider span{
+  font-size:20px;
+  transform:rotate(45deg);
+  display:inline-block;
+}
+
+/* ---------- Tomes ---------- */
+
+.tomes{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.tome{
+  display:block;
+  text-decoration:none;
+  color:inherit;
+  background:linear-gradient(180deg, rgba(18,12,26,.9), rgba(10,7,14,.9));
+  border:1px solid var(--abyss-line);
+  border-radius:2px;
+  padding:26px 30px;
+  position:relative;
+  transition:border-color .35s ease, transform .35s ease, box-shadow .35s ease;
+  overflow:hidden;
+}
+
+.tome::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:3px;
+  background:var(--violet);
+  opacity:.5;
+  transition:opacity .35s ease, box-shadow .35s ease;
+}
+
+.tome:hover{
+  border-color:var(--violet-glow);
+  transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(0,0,0,.5), 0 0 24px rgba(155,111,209,.12);
+}
+
+.tome:hover::before{
+  opacity:1;
+  box-shadow:0 0 12px var(--violet-glow);
+}
+
+.tome-mark{
+  font-family:'Cinzel', serif;
+  font-size:12px;
+  letter-spacing:.24em;
+  color:var(--sigil);
+  display:block;
+  margin-bottom:10px;
+}
+
+.tome h2{
+  font-family:'Cinzel', serif;
+  font-size:23px;
+  font-weight:500;
+  margin:0 0 8px;
+  color:var(--bone);
+}
+
+.tome p{
+  margin:0;
+  color:var(--bone-dim);
+  font-size:16.5px;
+}
+
+/* ---------- Footer ---------- */
+
+.footer{
+  margin-top:70px;
+  text-align:center;
+  color:var(--bone-dim);
+  font-size:14px;
+  letter-spacing:.04em;
+}
+
+.footer .glyph{
+  color:var(--violet-glow);
+  font-size:18px;
+  margin-bottom:10px;
+  display:block;
+}
+
+@media (max-width:600px){
+  h1{font-size:34px}
+  .wrap{padding:52px 20px 80px}
+  .tome{padding:22px 22px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .sigil{animation:none}
+  .tome{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="veil"></div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <img class="sigil" src="The_Void_Cult_logo.png" alt="logo">
+    <p class="eyebrow">A Fucking Title?</p>
+    <h1>Bloke ass Wanker Math</h1>
+    <p>Four math topics from Grade 10 batch of 2026-2027:</p>
+  </div>
+
+  <div class="divider"><span>◆</span></div>
+
+  <div class="tomes">
+
+    <a class="tome" href="math.html">
+      <span class="tome-mark">No. I</span>
+      <h2>Relations and Functions</h2>
+      <p>Placeholder</p>
+    </a>
+
+    <a class="tome" href="mathematical.html">
+      <span class="tome-mark">No. II</span>
+      <h2>The Ambiguous Case</h2>
+      <p>Placeholder</p>
+    </a>
+
+    <a class="tome" href="mathers.html">
+      <span class="tome-mark">No. III</span>
+      <h2>Law of Cosines</h2>
+      <p>Placeholder</p>
+    </a>
+
+    <a class="tome" href="mathing.html">
+      <span class="tome-mark">No. IV</span>
+      <h2>Composite Functions</h2>
+      <p>Placeholder</p>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    <span class="glyph">✦</span>
+    Spam email: nb1cruz@atomicmail.io
+  </div>
+
+</div>
+</body>
+</html>
